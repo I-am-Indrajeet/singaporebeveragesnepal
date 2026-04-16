@@ -1,0 +1,34 @@
+import { HeroProductShowcase } from "@/components/hero/HeroProductShowcase";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { BrandStory } from "@/components/sections/BrandStory";
+import { DistributorCTA } from "@/components/sections/DistributorCTA";
+import { EventHighlight } from "@/components/sections/EventHighlight";
+import { FruitGamesSection } from "@/components/sections/FruitGamesSection";
+import { NewsPreview } from "@/components/sections/NewsPreview";
+import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
+
+export default function HomePage() {
+  return (
+    <>
+      <HeroProductShowcase />
+      <AnimatedSection delay={0.04} direction="up">
+        <FruitGamesSection />
+      </AnimatedSection>
+      <AnimatedSection delay={0.08} direction="up">
+        <BrandStory />
+      </AnimatedSection>
+      <AnimatedSection delay={0.12} direction="up">
+        <WhyChooseUs />
+      </AnimatedSection>
+      <AnimatedSection delay={0.16} direction="up">
+        <EventHighlight />
+      </AnimatedSection>
+      <AnimatedSection delay={0.2} direction="up">
+        <DistributorCTA />
+      </AnimatedSection>
+      <AnimatedSection delay={0.24} direction="up">
+        <NewsPreview />
+      </AnimatedSection>
+    </>
+  );
+}
