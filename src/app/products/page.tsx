@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { ProductGrid } from "@/components/products/ProductGrid";
 import { SchemaScript } from "@/components/shared/SchemaScript";
 import { PageHero } from "@/components/shared/PageHero";
-import { PRODUCTS } from "@/data/products";
+import { CATALOG_PRODUCTS } from "@/data/products";
 import { buildBreadcrumbSchema, buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildMetadata({
@@ -16,7 +16,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ProductsPage() {
   return (
-    <main className="bg-white min-h-screen pb-32">
+    <main className="min-h-screen bg-[linear-gradient(180deg,#fff8f1_0%,#ffffff_24%,#fff6ec_100%)] pb-32">
       <SchemaScript
         schema={buildBreadcrumbSchema([
           { name: "Home", path: "/" },
@@ -28,15 +28,15 @@ export default function ProductsPage() {
         label="Our Portfolio"
         title={
           <>
-            A beverage portfolio designed for <span className="italic text-[#FF3366]">refreshment</span>, pairing, and premium mixing.
+            A sharper product wall for <span className="italic text-[#FF3366]">refreshment</span>, fruit flavour, and premium mixing.
           </>
         }
-        description="Filter the range by category and explore products rigorously built for retail shelves, horeca menus, and event supply."
+        description="Browse the core range and the Fruit Gems line in a denser four-column catalogue built for easier scanning, cleaner shelf presence, and faster product discovery."
         gradientFrom="from-rose-50"
       />
 
       <div className="mx-auto max-w-[85rem] pt-16 px-5 md:px-8 lg:px-10">
-        <ProductGrid products={PRODUCTS} />
+        <ProductGrid products={CATALOG_PRODUCTS} />
       </div>
     </main>
   );

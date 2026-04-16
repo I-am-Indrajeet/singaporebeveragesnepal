@@ -1,4 +1,5 @@
 import type { Product } from "@/types/product";
+import { FRUIT_GAMES_CATALOG_PRODUCTS } from "@/data/fruit-games";
 
 export const PRODUCTS: Product[] = [
   {
@@ -163,5 +164,7 @@ export const PRODUCTS: Product[] = [
     usageOccasions: ["Gin & Tonic", "Cocktail base", "Premium mixers"],
   },
 ];
+
+export const CATALOG_PRODUCTS: Product[] = [...PRODUCTS, ...FRUIT_GAMES_CATALOG_PRODUCTS];
 
 export const HERO_PRODUCTS = PRODUCTS;

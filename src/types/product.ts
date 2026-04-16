@@ -1,3 +1,18 @@
+export type ProductCategory =
+  | "sparkling"
+  | "still"
+  | "mixer"
+  | "flavoured"
+  | "fruit-gems";
+
+export const PRODUCT_CATEGORY_LABELS: Record<ProductCategory, string> = {
+  sparkling: "Sparkling",
+  still: "Still",
+  mixer: "Mixer",
+  flavoured: "Flavoured",
+  "fruit-gems": "Fruit Gems",
+};
+
 export type Product = {
   id: string;
   slug: string;
@@ -12,7 +27,7 @@ export type Product = {
   bgColorDark: string;
   accentColor: string;
   textColor: "light" | "dark";
-  category: "sparkling" | "still" | "mixer" | "flavoured";
+  category: ProductCategory;
   seoTitle: string;
   seoDescription: string;
   seoKeywords: string[];

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { EVENTS } from "@/data/events";
 import { NEWS_POSTS } from "@/data/news";
-import { PRODUCTS } from "@/data/products";
+import { CATALOG_PRODUCTS } from "@/data/products";
 import { SITE_URL } from "@/lib/seo/metadata";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const dynamicRoutes = [
-    ...PRODUCTS.map((product) => `/products/${product.slug}`),
+    ...CATALOG_PRODUCTS.map((product) => `/products/${product.slug}`),
     ...NEWS_POSTS.map((post) => `/news/${post.slug}`),
     ...EVENTS.map((event) => `/events/${event.slug}`),
   ];

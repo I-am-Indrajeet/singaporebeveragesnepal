@@ -59,6 +59,8 @@ function normalizeEvent(doc: SanityEventDocument): EventItem | null {
   }
 
   const fullDescription = blocksToParagraphs(doc.fullDescription);
+  const startDate = doc.eventDate ?? new Date().toISOString();
+  const isUpcoming = new Date(startDate).getTime() >= new Date().setHours(0, 0, 0, 0);
 
   return {
     id: doc._id,
@@ -68,14 +70,22 @@ function normalizeEvent(doc: SanityEventDocument): EventItem | null {
       doc.shortDescription ??
       fullDescription[0] ??
       "Upcoming Singapore Beverages event update.",
-    eventDate: doc.eventDate ?? new Date().toISOString(),
-    location: doc.location ?? "Nepal",
-    featuredImage: "/products/tonic-water.png",
     fullDescription:
       fullDescription.length > 0
         ? fullDescription
         : [doc.shortDescription ?? "Upcoming Singapore Beverages event update."],
+    startDate,
+    venue: undefined,
+    time: undefined,
+    city: doc.location ?? "Nepal",
+    category: "Hosted Event",
+    status: isUpcoming ? "Open" : "Closed",
+    isUpcoming,
+    featuredImage: "/products/tonic-water.png",
     gallery: ["/products/tonic-water.png", "/products/club-soda.png"],
+    registrationLink: "/contact",
+    highlightText: undefined,
+    pastEventRecap: undefined,
     published: doc.published ?? true,
     seoTitle: doc.seoTitle ?? doc.title,
     seoDescription:

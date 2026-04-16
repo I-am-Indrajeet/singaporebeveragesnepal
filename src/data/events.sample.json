@@ -1,0 +1,47 @@
+{
+  "events": [
+    {
+      "title": "Sip • Snap • Squeeze",
+      "slug": "sip-snap-and-squeeze",
+      "short_description": "Our inaugural public event celebrating Lemonzaa / Nimbu Pani—plus the official launch of KETO.",
+      "description": "A major public-facing event that celebrated flavor, youth energy, and the future direction of the brand.",
+      "start_date": "2025-08-02",
+      "end_date": null,
+      "time": "12:00 PM – 6:00 PM",
+      "venue": "Beach House",
+      "city": "Kathmandu",
+      "category": "Hosted Event",
+      "status": "Closed",
+      "is_upcoming": false,
+      "featured_image": "/products/nimbu-pani.png",
+      "gallery": [
+        "/products/nimbu-pani.png",
+        "/products/jeeru.png",
+        "/products/london-dry-tonic-water-can.png"
+      ],
+      "registration_link": "/events?participate=sip-snap-and-squeeze#upcoming",
+      "highlight_text": "Launch Event",
+      "past_event_recap": "A citrus-first, youth-driven launch day that introduced Lemonzaa / Nimbu Pani to the public and officially launched KETO—our bold step toward premium brand experiences."
+    },
+    {
+      "title": "LOCUS 2026 Refreshment Partnership",
+      "slug": "locus-2026-refreshment-partnership",
+      "short_description": "A high-energy partnership presence designed to keep the crowd refreshed with premium, Nepal-made beverages.",
+      "description": "Partnership appearance and refreshment support zone at LOCUS 2026.",
+      "start_date": "2026-05-09",
+      "end_date": null,
+      "time": "10:00 AM – 4:30 PM",
+      "venue": "Partner Venue",
+      "city": "Kathmandu",
+      "category": "Partnership Event",
+      "status": "Open",
+      "is_upcoming": true,
+      "featured_image": "/products/club-soda.png",
+      "gallery": ["/products/club-soda.png", "/products/nimbu-pani.png", "/products/jeeru.png"],
+      "registration_link": "/contact",
+      "highlight_text": "Refreshment Partnership",
+      "past_event_recap": null
+    }
+  ]
+}
+

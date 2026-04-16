@@ -1,5 +1,16 @@
+import type { Product } from "@/types/product";
 
-export const FRUIT_GAMES_PRODUCTS = [
+type FruitGamesFlavor = {
+  id: string;
+  name: string;
+  image: string;
+  color: string;
+  bgLight: string;
+  tagline: string;
+  description: string;
+};
+
+export const FRUIT_GAMES_PRODUCTS: FruitGamesFlavor[] = [
   {
     id: "fruit-gems-black-currant",
     name: "Black Currant",
@@ -118,3 +129,53 @@ export const FRUIT_GAMES_PRODUCTS = [
     description: "Classic, sweet strawberry perfection in a bottle.",
   },
 ];
+
+function getTextTone(color: string): Product["textColor"] {
+  const normalized = color.replace("#", "");
+  const red = Number.parseInt(normalized.slice(0, 2), 16);
+  const green = Number.parseInt(normalized.slice(2, 4), 16);
+  const blue = Number.parseInt(normalized.slice(4, 6), 16);
+  const brightness = red * 0.299 + green * 0.587 + blue * 0.114;
+
+  return brightness > 166 ? "dark" : "light";
+}
+
+export const FRUIT_GAMES_CATALOG_PRODUCTS: Product[] = FRUIT_GAMES_PRODUCTS.map(
+  (item) => ({
+    id: item.id,
+    slug: item.id,
+    name: item.name,
+    shortName: item.name,
+    tagline: item.tagline,
+    heroHeadline: `${item.name} with bright fruit energy.`,
+    heroSubtext: `Part of the Fruit Gems line, ${item.description
+      .charAt(0)
+      .toLowerCase()}${item.description.slice(1)}`,
+    description: `${item.name} in the Fruit Gems collection is designed for playful everyday refreshment, stronger shelf visibility, and a more fruit-forward drinking mood. ${item.description}`,
+    image: item.image,
+    bgColor: item.bgLight,
+    bgColorDark: item.color,
+    accentColor: item.color,
+    textColor: getTextTone(item.color),
+    category: "fruit-gems",
+    seoTitle: `Fruit Gems ${item.name} Drink Nepal | Singapore Beverages`,
+    seoDescription: `${item.name} fruit drink from the Fruit Gems collection by Singapore Beverages in Nepal.`,
+    seoKeywords: [
+      `fruit gems ${item.name.toLowerCase()}`,
+      `${item.name.toLowerCase()} drink nepal`,
+      "fruit drink nepal",
+    ],
+    sizes: ["250ml"],
+    features: [
+      item.tagline,
+      "Fruit-forward flavour",
+      "Serve ice cold",
+      "Bright shelf appeal",
+    ],
+    usageOccasions: [
+      "Grab-and-go refreshment",
+      "Daytime chill breaks",
+      "Casual fruit cravings",
+    ],
+  }),
+);

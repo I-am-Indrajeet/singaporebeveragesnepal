@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { SchemaScript } from "@/components/shared/SchemaScript";
 import { PageHero } from "@/components/shared/PageHero";
-import { PRODUCTS } from "@/data/products";
+import { CATALOG_PRODUCTS } from "@/data/products";
 import { buildBreadcrumbSchema, buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = buildMetadata({
@@ -47,7 +47,7 @@ export default function BulkOrderPage() {
               <input className="rounded-full border border-zinc-200 px-5 py-3" placeholder="Email address" />
               <select className="rounded-full border border-zinc-200 px-5 py-3">
                 <option>Select a product</option>
-                {PRODUCTS.map((product) => (
+                {CATALOG_PRODUCTS.map((product) => (
                   <option key={product.id}>{product.name}</option>
                 ))}
               </select>

@@ -9,8 +9,9 @@ import { motion } from "framer-motion";
 type EventPreviewType = {
   title?: string;
   shortDescription?: string;
-  eventDate?: string;
-  location?: string;
+  startDate?: string;
+  venue?: string;
+  city?: string;
   slug?: string;
 };
 
@@ -18,8 +19,8 @@ export function EventHighlight({ event }: { event?: EventPreviewType }) {
   // Fallbacks for empty state
   const title = event?.title ?? "The tasting experience, live.";
   const description = event?.shortDescription ?? "Join us for an exclusive showcase where we unveil our latest portfolio innovations designed for high-end hospitality and focused retail impact.";
-  const dateStr = event?.eventDate ?? "Upcoming Season";
-  const locationStr = event?.location ?? "Kathmandu Valley Showrooms";
+  const dateStr = event?.startDate ?? "Upcoming Season";
+  const locationStr = [event?.venue, event?.city].filter(Boolean).join(", ") || "Kathmandu Valley Showrooms";
 
   return (
     <section className={`py-24 md:py-32 px-5 md:px-8 lg:px-10 bg-[#FAFAF9] relative`}>

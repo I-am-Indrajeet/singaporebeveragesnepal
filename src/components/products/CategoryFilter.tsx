@@ -2,14 +2,14 @@
 
 import { cn } from "@/lib/utils/cn";
 import { RADIUS } from "@/styles/tokens";
-import type { Product } from "@/types/product";
+import { PRODUCT_CATEGORY_LABELS, type ProductCategory } from "@/types/product";
 
-export type ProductCategory = Product["category"] | "all";
+export type ProductFilterCategory = ProductCategory | "all";
 
 type CategoryFilterProps = {
-  activeCategory: ProductCategory;
-  categories: ProductCategory[];
-  onChange: (category: ProductCategory) => void;
+  activeCategory: ProductFilterCategory;
+  categories: ProductFilterCategory[];
+  onChange: (category: ProductFilterCategory) => void;
 };
 
 export function CategoryFilter({
@@ -21,9 +21,7 @@ export function CategoryFilter({
     <div className="flex flex-wrap gap-3">
       {categories.map((category) => {
         const label =
-          category === "all"
-            ? "All Products"
-            : category.charAt(0).toUpperCase() + category.slice(1);
+          category === "all" ? "All Products" : PRODUCT_CATEGORY_LABELS[category];
 
         return (
           <button
@@ -31,11 +29,11 @@ export function CategoryFilter({
             type="button"
             onClick={() => onChange(category)}
             className={cn(
-              "border px-4 py-2 text-sm font-medium capitalize transition-colors duration-300",
+              "border px-4 py-2 text-sm font-medium transition-all duration-300",
               RADIUS.pill,
               activeCategory === category
-                ? "border-zinc-950 bg-zinc-950 text-white"
-                : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400",
+                ? "border-zinc-950 bg-zinc-950 text-white shadow-[0_16px_30px_-20px_rgba(24,24,27,0.95)]"
+                : "border-white/70 bg-white/75 text-zinc-700 shadow-[0_10px_30px_-24px_rgba(24,24,27,0.55)] backdrop-blur hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-white",
             )}
           >
             {label}
