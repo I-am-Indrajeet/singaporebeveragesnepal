@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { SchemaScript } from "@/components/shared/SchemaScript";
+import { BRAND } from "@/config/brand";
 import { PageHero } from "@/components/shared/PageHero";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import CreatorCollaborationsSection from "@/components/sections/CreatorCollaborationsSection";
@@ -38,8 +39,6 @@ const contentIdeas = [
   "Event-day content and activation recaps",
   "Creative serving shots, pairings, and styling",
 ];
-
-const marketingMaterialsLink = "https://drive.google.com/";
 
 export const metadata: Metadata = buildMetadata({
   title: "Creator Program",
@@ -167,18 +166,24 @@ export default function CreatorPage() {
           <SectionHeading
             eyebrow="Marketing material"
             title="Download creator-ready marketing material."
-            subtitle="Use this section for logos, product visuals, campaign references, and brand assets. Replace the placeholder button link with your Google Drive folder."
+            subtitle="Use this section for logos, product visuals, campaign references, and brand assets once the official creator kit is ready."
           />
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
-            <a
-              href={marketingMaterialsLink}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-zinc-950 px-6 text-sm font-semibold text-white transition hover:-translate-y-1"
-            >
-              Download Marketing Material
-            </a>
+            {BRAND.creatorMarketingKitUrl ? (
+              <a
+                href={BRAND.creatorMarketingKitUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-12 items-center justify-center rounded-full bg-zinc-950 px-6 text-sm font-semibold text-white transition hover:-translate-y-1"
+              >
+                Download Marketing Material
+              </a>
+            ) : (
+              <span className="inline-flex h-12 items-center justify-center rounded-full bg-zinc-950/10 px-6 text-sm font-semibold text-zinc-900">
+                Marketing kit coming soon
+              </span>
+            )}
             <Link
               href="/contact"
               className="inline-flex h-12 items-center justify-center rounded-full border border-zinc-950/10 bg-white/70 px-6 text-sm font-semibold text-zinc-950 backdrop-blur transition hover:-translate-y-1 hover:bg-white"

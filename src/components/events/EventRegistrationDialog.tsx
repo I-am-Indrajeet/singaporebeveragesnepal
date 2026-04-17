@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { CalendarRange, CheckCircle2, Clock3, Mail, MapPin, Phone, Sparkles, User } from "lucide-react";
 
 import type { EventItem } from "@/types/event";
+import { BRAND } from "@/config/brand";
 import { cn } from "@/lib/utils/cn";
 import { formatEventDateRange } from "@/lib/utils/dates";
 import { getEventPalette } from "@/components/events/eventPalette";
@@ -183,10 +184,10 @@ export function EventRegistrationDialog({ open, onOpenChange, event }: EventRegi
                         <p className="mt-2 text-xs leading-5 text-white/55">
                           Prefer email?{" "}
                           <a
-                            href="mailto:hello@singaporebeverages.com.np"
+                            href={`mailto:${BRAND.email}`}
                             className="font-semibold text-white/80 underline underline-offset-4 hover:text-white"
                           >
-                            hello@singaporebeverages.com.np
+                            {BRAND.email}
                           </a>
                         </p>
 

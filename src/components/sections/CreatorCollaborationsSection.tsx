@@ -9,7 +9,6 @@ type Reel = {
   username: string;
   tag: string;
   caption: string;
-  url: string;
   poster: string;
 };
 
@@ -20,7 +19,6 @@ const reels: Reel[] = [
     tag: "PR Package",
     caption:
       "EP-2 of unboxing the PR package @singaporebeveragesnepal @lemonzaa_nimbupani — a refreshing PR package right before the New Year.",
-    url: "https://www.instagram.com/reel/DXGMsrIDwLX/",
     poster: "/images/reels/lifeofuru-pr-package-unboxing.webp",
   },
   {
@@ -29,7 +27,6 @@ const reels: Reel[] = [
     tag: "Refreshment Basket",
     caption:
       "Thank you @singaporebeveragesnepal for sending us this beautiful basket of refreshments. Happy new year to you and your team.",
-    url: "https://www.instagram.com/reel/DW_CDIFD7-a/",
     poster: "/images/reels/priyanka1st-refreshment-basket.webp",
   },
   {
@@ -38,7 +35,6 @@ const reels: Reel[] = [
     tag: "Creator Meet",
     caption:
       "Thank you for having me at Nimbu Pani Creators Meet 2025. A space where passion, purpose, and creativity flowed in every direction.",
-    url: "https://www.instagram.com/reel/DM24zjjSdm4/",
     poster: "/images/reels/kc-sylvia-nimbu-pani-creators-meet.webp",
   },
   {
@@ -47,7 +43,6 @@ const reels: Reel[] = [
     tag: "Brand Story",
     caption:
       "What an amazing Nepali success story of @singaporebeveragesnepal starting from Jeeru to Nimbu Pani and a host of other drinks successful in 40 nations across the world.",
-    url: "https://www.instagram.com/reel/DM5HATFSHF4/",
     poster: "/images/reels/anilkesharyshah-brand-story.webp",
   },
   {
@@ -56,7 +51,6 @@ const reels: Reel[] = [
     tag: "Event Partner",
     caption:
       "Fueling innovation the keto way. Powered by @singaporebeveragesnepal Keto Lemon Lime at our hackathon.",
-    url: "https://www.instagram.com/reel/DVJXHqoEt_G/",
     poster: "/images/reels/pace-acem-keto-hackathon.webp",
   },
   {
@@ -65,7 +59,6 @@ const reels: Reel[] = [
     tag: "Product Shoot",
     caption:
       "Crafted in our own studio, where even Nimbu Pani turns cinematic. Product featured: Lemonzaa Nimbu Pani.",
-    url: "https://www.instagram.com/p/DLpL0YWq0Zm/",
     poster: "/images/reels/bloom-adagency-product-shoot.webp",
   },
 ];
@@ -90,7 +83,7 @@ export default function CreatorCollaborationsSection() {
       <div className="relative mx-auto max-w-[90rem]">
         <div className="mb-10 px-6 sm:px-8 md:mb-16 md:px-12 text-center">
           <p className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#FF8A00] shadow-sm">
-            Instagram Collaborations
+            Creator Collaborations
           </p>
           <h2 className="mx-auto mt-6 max-w-2xl font-heading text-[2.2rem] font-bold leading-tight tracking-tight text-zinc-950 sm:text-[3rem] md:text-[3.5rem]">
             Reel Moments & Stories
@@ -103,11 +96,8 @@ export default function CreatorCollaborationsSection() {
         {/* Swipeable Container */}
         <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-14 pt-4 sm:gap-6 sm:px-8 md:gap-8 md:px-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {reels.map((reel, index) => (
-            <motion.a
-              key={reel.url}
-              href={reel.url}
-              target="_blank"
-              rel="noreferrer"
+            <motion.article
+              key={`${reel.username}-${reel.title}`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
@@ -154,14 +144,11 @@ export default function CreatorCollaborationsSection() {
                 <p className="line-clamp-3 text-[0.9rem] leading-relaxed text-zinc-600">
                   {reel.caption}
                 </p>
-                <div className="mt-4 flex items-center font-semibold text-sm text-[#FF8A00] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  View on Instagram
-                  <svg className="ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                <div className="mt-4 text-sm font-semibold text-[#FF8A00] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  Featured community moment
                 </div>
               </div>
-            </motion.a>
+            </motion.article>
           ))}
         </div>
       </div>

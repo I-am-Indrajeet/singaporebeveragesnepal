@@ -1,3 +1,4 @@
+import { SchemaScript } from "@/components/shared/SchemaScript";
 import { HeroProductShowcase } from "@/components/hero/HeroProductShowcase";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { BrandStory } from "@/components/sections/BrandStory";
@@ -6,10 +7,12 @@ import { EventHighlight } from "@/components/sections/EventHighlight";
 import { FruitGamesSection } from "@/components/sections/FruitGamesSection";
 import { NewsPreview } from "@/components/sections/NewsPreview";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
+import { buildLocalBusinessSchema } from "@/lib/seo/metadata";
 
 export default function HomePage() {
   return (
     <>
+      <SchemaScript schema={buildLocalBusinessSchema()} />
       <HeroProductShowcase />
       <AnimatedSection delay={0.04} direction="up">
         <FruitGamesSection />

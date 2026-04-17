@@ -1,12 +1,52 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Music2, Twitter, Youtube } from "lucide-react";
 
+import { BRAND, BRAND_PHONE_LINKS } from "@/config/brand";
 import { PRODUCTS } from "@/data/products";
 import { SPACING } from "@/styles/tokens";
 
 export function SiteFooter() {
+  const socialLinks = [
+    {
+      name: "LinkedIn",
+      href: BRAND.socialLinks.linkedin,
+      icon: Linkedin,
+      label: "Visit Singapore Beverages on LinkedIn",
+    },
+    {
+      name: "Instagram",
+      href: BRAND.socialLinks.instagram,
+      icon: Instagram,
+      label: "Visit Singapore Beverages on Instagram",
+    },
+    {
+      name: "Facebook",
+      href: BRAND.socialLinks.facebook,
+      icon: Facebook,
+      label: "Visit Singapore Beverages on Facebook",
+    },
+    {
+      name: "YouTube",
+      href: BRAND.socialLinks.youtube,
+      icon: Youtube,
+      label: "Visit Singapore Beverages on YouTube",
+    },
+    {
+      name: "TikTok",
+      href: BRAND.socialLinks.tiktok,
+      icon: Music2,
+      label: "Visit Singapore Beverages on TikTok",
+    },
+    {
+      name: "X",
+      href: BRAND.socialLinks.twitter,
+      icon: Twitter,
+      label: "Visit Singapore Beverages on X",
+    },
+  ].filter((item) => item.href.trim().length > 0);
+
   return (
     <footer className="border-t border-zinc-200 bg-white">
       <div
@@ -26,29 +66,22 @@ export function SiteFooter() {
             Premium refreshment, mixers, and signature flavours designed for
             Nepal&apos;s retail, hospitality, and distribution markets.
           </p>
-          <div className="flex gap-3 pt-3">
-            <Link
-              href="/"
-              aria-label="Instagram"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 transition-colors hover:text-zinc-950"
-            >
-              <Instagram className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/"
-              aria-label="Facebook"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 transition-colors hover:text-zinc-950"
-            >
-              <Facebook className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/"
-              aria-label="LinkedIn"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 transition-colors hover:text-zinc-950"
-            >
-              <Linkedin className="h-4 w-4" />
-            </Link>
-          </div>
+          {socialLinks.length > 0 ? (
+            <div className="flex gap-3 pt-3">
+              {socialLinks.map(({ name, href, icon: Icon, label }) => (
+                <a
+                  key={name}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 transition-colors hover:text-zinc-950"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div>
@@ -83,8 +116,16 @@ export function SiteFooter() {
             Contact
           </p>
           <div className="mt-4 flex flex-col gap-3 text-sm leading-6 text-zinc-700">
-            <p>Kathmandu, Nepal</p>
-            <Link href="/contact">General Enquiries</Link>
+            <p>
+              {BRAND.address.streetAddress}, {BRAND.address.addressLocality},{" "}
+              {BRAND.address.addressRegion}
+            </p>
+            <a href={`mailto:${BRAND.email}`}>{BRAND.email}</a>
+            {BRAND_PHONE_LINKS.map((phone) => (
+              <a key={phone.href} href={phone.href}>
+                {phone.display}
+              </a>
+            ))}
             <Link href="/distributor">Distributor Partnerships</Link>
             <Link href="/bulk-order">Bulk Orders</Link>
           </div>
@@ -92,7 +133,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-zinc-200 px-4 py-4 md:px-8 lg:px-12">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 text-sm text-zinc-500 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} Singapore Beverages. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {BRAND.name}. All rights reserved.</p>
           <div className="flex flex-wrap gap-4">
             <Link href="/faq">FAQ</Link>
             <Link href="/soft-drinks-nepal">Soft Drinks Nepal</Link>

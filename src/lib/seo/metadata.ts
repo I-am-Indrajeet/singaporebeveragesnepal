@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 
+import { BRAND } from "@/config/brand";
 import type { Product } from "@/types/product";
 
-export const SITE_URL = "https://singaporebeverages.com.np";
-export const SITE_NAME = "Singapore Beverages";
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
+  "https://singaporebeverage.com";
+export const SITE_NAME = BRAND.name;
 export const DEFAULT_OG_IMAGE = "/brand/og-default.svg";
+
+function normalizePath(path: string) {
+  if (!path) return "";
+  return path.startsWith("/") ? path : `/${path}`;
+}
 
 export function buildMetadata(opts: {
   title: string;
@@ -13,7 +21,8 @@ export function buildMetadata(opts: {
   image?: string;
   keywords?: string[];
 }): Metadata {
-  const url = `${SITE_URL}${opts.path}`;
+  const url = buildCanonicalUrl(opts.path);
+  const imageUrl = buildCanonicalUrl(opts.image ?? DEFAULT_OG_IMAGE);
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -28,7 +37,7 @@ export function buildMetadata(opts: {
       siteName: SITE_NAME,
       images: [
         {
-          url: opts.image ?? DEFAULT_OG_IMAGE,
+          url: imageUrl,
           width: 1200,
           height: 630,
         },
@@ -39,13 +48,17 @@ export function buildMetadata(opts: {
       card: "summary_large_image",
       title: opts.title,
       description: opts.description,
-      images: [opts.image ?? DEFAULT_OG_IMAGE],
+      images: [imageUrl],
     },
   };
 }
 
 export function buildCanonicalUrl(path: string) {
-  return `${SITE_URL}${path}`;
+  if (/^https?:\/\//.test(path)) {
+    return path;
+  }
+
+  return `${SITE_URL}${normalizePath(path)}`;
 }
 
 export function buildBreadcrumbSchema(
@@ -64,17 +77,68 @@ export function buildBreadcrumbSchema(
 }
 
 export function buildOrganizationSchema() {
+  const verifiedSocialLinks = Object.values(BRAND.socialLinks).filter(Boolean);
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: SITE_NAME,
+    name: BRAND.name,
+    legalName: BRAND.legalName,
     url: SITE_URL,
     logo: buildCanonicalUrl("/brand/logo.svg"),
-    sameAs: [
-      SITE_URL,
-      `${SITE_URL}/news`,
-      `${SITE_URL}/products`,
+    email: BRAND.email,
+    telephone: BRAND.phoneNumbers[0],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: BRAND.address.streetAddress,
+      addressLocality: BRAND.address.addressLocality,
+      addressRegion: BRAND.address.addressRegion,
+      postalCode: BRAND.address.postalCode,
+      addressCountry: BRAND.address.addressCountry,
+    },
+    sameAs: verifiedSocialLinks,
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: BRAND.phoneNumbers[0],
+        contactType: "customer service",
+        areaServed: "NP",
+        availableLanguage: ["English", "Nepali"],
+      },
+      {
+        "@type": "ContactPoint",
+        telephone: BRAND.phoneNumbers[1],
+        contactType: "sales",
+        areaServed: "NP",
+        availableLanguage: ["English", "Nepali"],
+      },
     ],
+  };
+}
+
+export function buildLocalBusinessSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: BRAND.legalName,
+    image: buildCanonicalUrl("/brand/logo.svg"),
+    logo: buildCanonicalUrl("/brand/logo.svg"),
+    url: SITE_URL,
+    email: BRAND.email,
+    telephone: BRAND.phoneNumbers[0],
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: BRAND.address.streetAddress,
+      addressLocality: BRAND.address.addressLocality,
+      addressRegion: BRAND.address.addressRegion,
+      postalCode: BRAND.address.postalCode,
+      addressCountry: BRAND.address.addressCountry,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "Nepal",
+    },
+    sameAs: Object.values(BRAND.socialLinks).filter(Boolean),
   };
 }
 
@@ -87,7 +151,7 @@ export function buildProductSchema(product: Product) {
     image: [buildCanonicalUrl(product.image)],
     brand: {
       "@type": "Brand",
-      name: SITE_NAME,
+      name: BRAND.name,
     },
     category: product.category,
     sku: product.id,
