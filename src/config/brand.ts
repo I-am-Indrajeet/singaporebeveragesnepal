@@ -13,8 +13,8 @@ export const BRAND = {
   },
   socialLinks: {
     linkedin: "https://np.linkedin.com/company/singapore-beverages-nepal-pvt-ltd",
-    facebook: "",
-    instagram: "",
+    facebook: "https://www.facebook.com/singaporebeverages/reels/",
+    instagram: "https://www.instagram.com/reel/C4YFGfXBz8l/",
     tiktok: "",
     youtube: "",
     twitter: "",
