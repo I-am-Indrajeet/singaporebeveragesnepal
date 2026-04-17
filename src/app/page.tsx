@@ -2,7 +2,6 @@ import { HeroProductShowcase } from "@/components/hero/HeroProductShowcase";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { BrandStory } from "@/components/sections/BrandStory";
 import CreatorCollaborationsSection from "@/components/sections/CreatorCollaborationsSection";
-import { DistributorCTA } from "@/components/sections/DistributorCTA";
 import { EventHighlight } from "@/components/sections/EventHighlight";
 import { FruitGamesSection } from "@/components/sections/FruitGamesSection";
 import { NewsPreview } from "@/components/sections/NewsPreview";
@@ -27,10 +26,7 @@ export default function HomePage() {
       <AnimatedSection delay={0.16} direction="up">
         <EventHighlight />
       </AnimatedSection>
-      <AnimatedSection delay={0.2} direction="up">
-        <DistributorCTA />
-      </AnimatedSection>
-      <AnimatedSection delay={0.24} direction="up">
+      <AnimatedSection delay={0.20} direction="up">
         <NewsPreview />
       </AnimatedSection>
     </>

@@ -4,8 +4,6 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-// If using server components, make sure to handle data fetching safely.
-// For the visual redesign, we accept props or fallback mock data.
 type NewsItemType = {
   id: string;
   category: string;
@@ -15,7 +13,6 @@ type NewsItemType = {
 };
 
 export function NewsPreview({ items = [] }: { items?: NewsItemType[] }) {
-  // Mock data for visual layout if none supplied
   const displayItems = items.length >= 3 ? items.slice(0, 3) : [
     {
       id: "1",
@@ -40,98 +37,72 @@ export function NewsPreview({ items = [] }: { items?: NewsItemType[] }) {
     }
   ];
 
-  const featured = displayItems[0];
-  const supporting = displayItems.slice(1);
-
   return (
-    <section className="bg-white py-24 md:py-32 px-5 md:px-8 lg:px-10">
+    <section className="bg-zinc-50 py-24 md:py-32 px-5 md:px-8 lg:px-10">
       <div className="mx-auto max-w-[85rem]">
         
-        {/* Editorial Header */}
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between mb-16 border-b border-zinc-100 pb-12">
-          <div className="max-w-xl">
-            <h2 className="font-serif text-[3rem] md:text-[4rem] text-zinc-900 tracking-tight leading-[1.05]">
-              Latest News
+        {/* Header */}
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between mb-16">
+          <div className="max-w-2xl">
+            <h2 className="font-heading text-4xl md:text-5xl lg:text-6xl text-zinc-900 font-bold tracking-tight">
+              Latest from the Brand
             </h2>
-            <p className="mt-4 text-lg text-zinc-500 font-medium">Stories, product drops, and brand updates from the team at Singapore Beverages.</p>
+            <p className="mt-5 text-lg text-zinc-500 font-medium leading-relaxed">
+              Stories, product drops, and brand updates from the team at Singapore Beverages.
+            </p>
           </div>
           <Link
             href="/news"
-            className="group flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-zinc-900 transition-colors hover:text-zinc-500 py-2"
+            className="group inline-flex items-center justify-center gap-2 rounded-full border border-zinc-200 bg-white px-6 py-3 text-sm font-bold uppercase tracking-widest text-zinc-900 shadow-sm transition-all hover:border-zinc-300 hover:bg-zinc-100"
           >
             Visit Newsroom
-            <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </Link>
         </div>
 
-        {/* Asymmetric Newsroom Layout */}
-        <div className="grid lg:grid-cols-12 gap-6 lg:gap-8">
-          
-          {/* Featured Article */}
-          <Link href={`/news/${featured.id}`} className="lg:col-span-7 group outline-none h-full block">
-            <motion.article 
-              whileHover={{ y: -8 }}
-              transition={{ ease: "easeOut", duration: 0.5 }}
-              className="flex flex-col h-full bg-[#FAFAF9] rounded-[2.5rem] border border-zinc-100 p-2 overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.05)] hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.1)] transition-shadow duration-500"
-            >
-              {/* Photo placeholder or image */}
-              <div className="w-full h-64 md:h-[22rem] bg-zinc-200 rounded-[2rem] overflow-hidden relative">
-                <div className="absolute inset-0 bg-gradient-to-tr from-zinc-300 to-zinc-100 transition-transform duration-700 group-hover:scale-105" />
-              </div>
-              
-              <div className="p-8 md:p-10 flex flex-col flex-1 justify-between">
-                <div>
-                  <div className="flex items-center gap-4 mb-6">
-                    <span className="inline-flex items-center rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[#FF3366] shadow-sm">
-                      {featured.category}
-                    </span>
-                    <span className="text-sm font-medium tracking-wide text-zinc-400 font-mono">
-                      {featured.date}
-                    </span>
-                  </div>
-                  <h3 className="font-serif text-3xl md:text-[2.25rem] font-medium leading-[1.1] tracking-tight text-zinc-900 group-hover:text-[#FF3366] transition-colors duration-400">
-                    {featured.title}
-                  </h3>
-                  <p className="mt-6 text-[1.1rem] font-medium leading-relaxed text-zinc-500 line-clamp-3">
-                    {featured.excerpt}
-                  </p>
+        {/* 3-Column Grid */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+          {displayItems.map((item, idx) => (
+            <Link href={`/news/${item.id}`} key={item.id} className="group outline-none block h-full">
+              <motion.article 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-zinc-200 bg-white shadow-sm transition-all duration-400 group-hover:border-[#FF8A00]/30 group-hover:shadow-[0_20px_40px_-15px_rgba(255,138,0,0.15)]"
+              >
+                <div className="relative h-48 w-full bg-zinc-100 overflow-hidden">
+                   <div className="absolute inset-0 bg-gradient-to-tr from-zinc-200 to-zinc-100 transition-transform duration-700 group-hover:scale-105" />
+                   <div className="absolute left-4 top-4">
+                     <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-zinc-900 backdrop-blur-md">
+                       {item.category}
+                     </span>
+                   </div>
                 </div>
-              </div>
-            </motion.article>
-          </Link>
-
-          {/* Supporting Articles */}
-          <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-8">
-            {supporting.map((item) => (
-              <Link href={`/news/${item.id}`} key={item.id} className="group outline-none flex-1 block">
-                <motion.article 
-                  whileHover={{ x: 8 }}
-                  transition={{ ease: "easeOut", duration: 0.4 }}
-                  className="flex flex-col justify-center h-full bg-white rounded-[2.5rem] border border-zinc-100 p-8 md:p-10 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.08)] transition-all duration-400 relative overflow-hidden"
-                >
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-32 h-32 bg-zinc-50 rounded-full blur-3xl -z-10 group-hover:bg-[#FF8A00]/5 transition-colors duration-500" />
-                  
-                  <div className="flex items-center gap-4 mb-5">
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#FF8A00]">
-                      {item.category}
-                    </span>
-                    <span className="w-1 h-1 rounded-full bg-zinc-300" />
-                    <span className="text-sm font-medium tracking-wide text-zinc-400 font-mono">
+                
+                <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
+                  <div>
+                    <span className="text-xs font-medium tracking-wide text-zinc-400 font-mono">
                       {item.date}
                     </span>
+                    <h3 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-zinc-900 group-hover:text-[#FF8A00] transition-colors duration-300">
+                      {item.title}
+                    </h3>
+                    <p className="mt-4 line-clamp-3 text-[1.05rem] font-medium leading-relaxed text-zinc-500">
+                      {item.excerpt}
+                    </p>
                   </div>
-                  
-                  <h3 className="font-serif text-[1.5rem] md:text-[1.75rem] font-medium leading-[1.2] tracking-tight text-zinc-900 group-hover:text-[#FF8A00] transition-colors duration-300">
-                    {item.title}
-                  </h3>
-                  <p className="mt-4 text-[1rem] font-medium leading-relaxed text-zinc-500 line-clamp-2">
-                    {item.excerpt}
-                  </p>
-                </motion.article>
-              </Link>
-            ))}
-          </div>
-
+                  <div className="mt-8 flex items-center font-semibold text-sm text-[#FF8A00] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    Read Story
+                    <svg className="ml-1 h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+              </motion.article>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

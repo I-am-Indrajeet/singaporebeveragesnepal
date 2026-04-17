@@ -48,22 +48,22 @@ export function EventRegistrationDialog({ open, onOpenChange, event }: EventRegi
               />
             </Dialog.Overlay>
 
-            <Dialog.Content asChild>
-              <motion.div
-                className="fixed left-1/2 top-1/2 z-50 w-[min(42rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-[0_40px_120px_-50px_rgba(0,0,0,0.85)]"
-                style={
-                  {
-                    ["--ev-accent" as string]: palette.accent,
-                    ["--ev-from" as string]: palette.from,
-                    ["--ev-via" as string]: palette.via,
-                    ["--ev-to" as string]: palette.to,
-                  } as React.CSSProperties
-                }
-                initial={reduceMotion ? undefined : { opacity: 0, y: 18, scale: 0.98 }}
-                animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-                exit={reduceMotion ? undefined : { opacity: 0, y: 18, scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 240, damping: 24, mass: 0.7 }}
-              >
+              <Dialog.Content asChild>
+                <motion.div
+                  className="fixed left-1/2 top-1/2 z-50 w-[min(42rem,calc(100vw-2rem))] max-h-[calc(100vh-2rem)] overflow-y-auto overflow-x-hidden rounded-[2rem] border border-white/10 bg-white shadow-[0_40px_120px_-50px_rgba(0,0,0,0.85)]"
+                  style={
+                    {
+                      ["--ev-accent" as string]: palette.accent,
+                      ["--ev-from" as string]: palette.from,
+                      ["--ev-via" as string]: palette.via,
+                      ["--ev-to" as string]: palette.to,
+                    } as React.CSSProperties
+                  }
+                  initial={reduceMotion ? { x: "-50%", y: "-50%" } : { opacity: 0, x: "-50%", y: "-46%", scale: 0.98 }}
+                  animate={reduceMotion ? { x: "-50%", y: "-50%" } : { opacity: 1, x: "-50%", y: "-50%", scale: 1 }}
+                  exit={reduceMotion ? { x: "-50%", y: "-50%" } : { opacity: 0, x: "-50%", y: "-46%", scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 240, damping: 24, mass: 0.7 }}
+                >
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.9),transparent_45%),radial-gradient(circle_at_100%_40%,var(--ev-from),transparent_50%),radial-gradient(circle_at_20%_100%,var(--ev-to),transparent_50%)] opacity-[0.16]" />
                 <div className="relative z-10 grid gap-0 md:grid-cols-[1fr_0.92fr]">
                   <div className="p-7 sm:p-8">
