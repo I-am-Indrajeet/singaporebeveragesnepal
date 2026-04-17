@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/products",
     "/events",
     "/news",
+    "/creator",
     "/distributor",
     "/bulk-order",
     "/contact",

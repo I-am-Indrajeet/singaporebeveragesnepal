@@ -1,11 +1,14 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import type { EventItem } from "@/types/event";
+import { UpcomingSpotlight } from "@/components/events/UpcomingSpotlight";
+import { PastEventsTimeline } from "@/components/events/PastEventsTimeline";
 import { EventRegistrationDialog } from "@/components/events/EventRegistrationDialog";
+import { EventsCtaBanner } from "@/components/events/EventsCtaBanner";
 import { parseLocalDate } from "@/lib/utils/dates";
 
 function isUpcomingEvent(event: EventItem) {
@@ -20,7 +23,12 @@ function sortByStartDateAsc(a: EventItem, b: EventItem) {
   return parseLocalDate(a.startDate).getTime() - parseLocalDate(b.startDate).getTime();
 }
 
+function sortByStartDateDesc(a: EventItem, b: EventItem) {
+  return parseLocalDate(b.startDate).getTime() - parseLocalDate(a.startDate).getTime();
+}
+
 export function EventsExperience({ events }: { events: EventItem[] }) {
+  const reduceMotion = useReducedMotion();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -36,12 +44,16 @@ export function EventsExperience({ events }: { events: EventItem[] }) {
       .map((event) => ({ ...event, isUpcoming: isUpcomingEvent(event) }));
   }, [events]);
 
-  const allEvents = React.useMemo(
-    () => normalized.slice().sort(sortByStartDateAsc),
+  const allUpcoming = React.useMemo(
+    () => normalized.filter((event) => event.isUpcoming).slice().sort(sortByStartDateAsc),
+    [normalized],
+  );
+  const allPast = React.useMemo(
+    () => normalized.filter((event) => !event.isUpcoming).slice().sort(sortByStartDateDesc),
     [normalized],
   );
 
-  const [featuredEvent, ...otherEvents] = allEvents;
+  const nextEvent = allUpcoming[0] ?? null;
 
   function openRegistration(event: EventItem) {
     setSelectedEvent(event);
@@ -62,93 +74,78 @@ export function EventsExperience({ events }: { events: EventItem[] }) {
   }, [normalized, participateSlug, pathname, router]);
 
   return (
-    <main className="bg-white min-h-screen pb-32">
-      <section className="relative bg-gradient-to-b from-blue-50 to-white pb-20 pt-16 md:pb-28 md:pt-24">
-        <div className="mx-auto max-w-[85rem] px-5 md:px-8 lg:px-10">
-          <header className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.18em] text-zinc-500">Events & activations</p>
-            <h1 className="mt-4 font-heading text-5xl text-zinc-950 md:text-6xl">
+    <>
+      <section className="bg-[#FAFAF9] pb-28 pt-28 md:pb-36 md:pt-32">
+        <div className="mx-auto max-w-[90rem] px-5 md:px-8 lg:px-10">
+          <header className="mx-auto max-w-3xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-zinc-500">Events & activations</p>
+            <h1 className="mt-4 font-heading text-5xl tracking-tight text-zinc-950 md:text-6xl">
               Join the refreshment experience.
             </h1>
             <p className="mt-5 text-base leading-7 text-zinc-600">
-              Browse upcoming experiences and past highlights—hosted events, brand activations, and partnership moments across Nepal.
+              Browse upcoming experiences and past highlights—hosted events, brand activations, and partnership moments
+              across Nepal.
             </p>
           </header>
         </div>
+
+        <div className="mx-auto mt-10 max-w-[90rem] space-y-16 px-5 md:mt-12 md:px-8 lg:px-10">
+          <motion.div
+            initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="space-y-20 md:space-y-24"
+          >
+            <UpcomingSection events={allUpcoming} onParticipate={openRegistration} />
+            <PastSection events={allPast} />
+          </motion.div>
+
+          <div className="pt-8 md:pt-12">
+            <EventsCtaBanner nextEvent={nextEvent} onParticipate={openRegistration} />
+          </div>
+        </div>
       </section>
-
-      <div className="mx-auto max-w-[85rem] px-5 md:px-8 lg:px-10 pt-20 space-y-16">
-        {featuredEvent ? (
-          <section className="grid gap-8 overflow-hidden rounded-[2.25rem] border border-zinc-200 bg-white lg:grid-cols-[0.95fr_1.05fr]">
-            <div className="flex items-center justify-center bg-zinc-50 p-8">
-              <Image
-                src={featuredEvent.featuredImage}
-                alt={`${featuredEvent.title} cover image`}
-                width={560}
-                height={900}
-                className="h-auto w-[12rem] object-contain md:w-[14rem]"
-              />
-            </div>
-            <div className="p-8 md:p-10">
-              <p className="text-sm uppercase tracking-[0.18em] text-zinc-500">
-                {featuredEvent.category}
-              </p>
-              <h2 className="mt-4 font-heading text-4xl text-zinc-950">
-                {featuredEvent.title}
-              </h2>
-              <p className="mt-4 text-base leading-7 text-zinc-600">
-                {featuredEvent.shortDescription}
-              </p>
-              <p className="mt-6 text-sm font-medium text-zinc-700">
-                {parseLocalDate(featuredEvent.startDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-              <button
-                onClick={() => openRegistration(featuredEvent)}
-                className="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-zinc-950 px-6 text-sm font-semibold text-white hover:bg-zinc-800 transition-colors"
-              >
-                Learn More
-              </button>
-            </div>
-          </section>
-        ) : null}
-
-        <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {otherEvents.map((event) => (
-            <button
-              key={event.id}
-              onClick={() => openRegistration(event)}
-              className="rounded-[2rem] border border-zinc-200 bg-white p-6 text-left hover:border-zinc-300 hover:shadow-md transition-all"
-            >
-              <p className="text-sm uppercase tracking-[0.18em] text-zinc-500">
-                {event.category}
-              </p>
-              <h2 className="mt-4 font-heading text-2xl text-zinc-950">
-                {event.title}
-              </h2>
-              <p className="mt-4 text-sm leading-7 text-zinc-600">
-                {event.shortDescription}
-              </p>
-              <p className="mt-6 text-sm font-medium text-zinc-700">
-                {parseLocalDate(event.startDate).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </button>
-          ))}
-        </section>
-      </div>
 
       <EventRegistrationDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         event={selectedEvent}
       />
-    </main>
+    </>
+  );
+}
+
+function UpcomingSection({ events, onParticipate }: { events: EventItem[]; onParticipate: (event: EventItem) => void }) {
+  return (
+    <section id="upcoming" className="scroll-mt-28 space-y-8">
+      <header className="mx-auto max-w-3xl text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.28em] text-zinc-500">Upcoming events</p>
+        <h2 className="mt-4 font-heading text-4xl tracking-tight text-zinc-950 md:text-5xl">
+          Join what’s next.
+        </h2>
+        <p className="mt-4 text-base leading-7 text-zinc-600">
+          Premium hosted experiences, partnership activations, and crowd-ready refreshment moments—built to feel fun,
+          clean, and confidently Nepali.
+        </p>
+      </header>
+      <UpcomingSpotlight events={events} onParticipate={onParticipate} />
+    </section>
+  );
+}
+
+function PastSection({ events }: { events: EventItem[] }) {
+  return (
+    <section id="past" className="scroll-mt-28 space-y-10">
+      <header className="mx-auto max-w-3xl text-center">
+        <p className="text-xs font-bold uppercase tracking-[0.28em] text-zinc-500">Moments we’ve created</p>
+        <h2 className="mt-4 font-heading text-4xl tracking-tight text-zinc-950 md:text-5xl">
+          Past highlights with real energy.
+        </h2>
+        <p className="mt-4 text-base leading-7 text-zinc-600">
+          Scroll through the memories—festival activations, community partnerships, and our biggest brand moments.
+        </p>
+      </header>
+      <PastEventsTimeline events={events} />
+    </section>
   );
 }

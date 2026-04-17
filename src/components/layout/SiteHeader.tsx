@@ -5,7 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Menu, ShoppingBag, UserCircle2 } from "lucide-react";
+import { Menu } from "lucide-react";
+import { motion } from "framer-motion";
 
 import { useHeroTheme } from "@/components/hero/HeroThemeContext";
 import { MobileNav } from "@/components/layout/MobileNav";
@@ -17,6 +18,7 @@ const NAV_LINKS = [
   { href: "/products", label: "Products" },
   { href: "/about", label: "About" },
   { href: "/events", label: "Events" },
+  { href: "/creator", label: "Creator" },
   { href: "/news", label: "News" },
   { href: "/contact", label: "Contact" },
 ];
@@ -50,7 +52,8 @@ export function SiteHeader() {
         )}
         style={{ 
           ["--accent" as string]: accentColor,
-          backgroundColor: 'transparent'
+          backgroundColor: isCondensed ? 'rgba(255, 255, 255, 0.85)' : 'transparent',
+          backdropFilter: isCondensed ? 'blur(10px)' : 'none',
         }}
       >
         <div
@@ -78,20 +81,22 @@ export function SiteHeader() {
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      "rounded-full px-5 py-2.5 text-sm font-semibold tracking-wide text-zinc-600 transition-all duration-300 hover:text-zinc-900",
-                      isActive && "text-zinc-950 shadow-[0_8px_24px_-18px_rgba(24,24,27,0.3)]",
+                      "relative rounded-full px-5 py-2.5 text-sm font-semibold tracking-wide transition-colors duration-300",
+                      isActive ? "text-zinc-950" : "text-zinc-600 hover:text-zinc-900",
                     )}
-                    style={
-                      isActive
-                        ? {
-                            backgroundColor: `${accentColor}25`,
-                            boxShadow: `inset 0 0 0 1px ${accentColor}40`,
-                            color: '#1A1A1A'
-                          }
-                        : undefined
-                    }
                   >
-                    {link.label}
+                    {isActive ? (
+                      <motion.span
+                        layoutId="site-nav-active"
+                        className="absolute inset-0 rounded-full"
+                        style={{
+                          backgroundColor: `${accentColor}25`,
+                          boxShadow: `inset 0 0 0 1px ${accentColor}40, 0 8px 24px -18px rgba(24,24,27,0.3)`,
+                        }}
+                        transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.8 }}
+                      />
+                    ) : null}
+                    <span className="relative z-10">{link.label}</span>
                   </Link>
                 );
               })}
@@ -99,23 +104,6 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center justify-end gap-3 lg:flex flex-1 lg:flex-none">
-            <button
-              type="button"
-              aria-label="Account"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-black/6 bg-white/82 text-zinc-800 shadow-[0_12px_30px_-24px_rgba(24,24,27,0.25)] backdrop-blur-xl transition-all duration-300 hover:scale-105"
-              style={{ color: '#1A1A1A' }}
-            >
-              <UserCircle2 className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              aria-label="Cart"
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-black/6 bg-white/82 text-zinc-800 shadow-[0_12px_30px_-24px_rgba(24,24,27,0.25)] backdrop-blur-xl transition-all duration-300 hover:scale-105"
-              style={{ color: '#1A1A1A' }}
-            >
-              <ShoppingBag className="h-5 w-5" />
-            </button>
-            
             <div className="ml-2">
               <PrimaryButton
                 label="Become a Distributor"
