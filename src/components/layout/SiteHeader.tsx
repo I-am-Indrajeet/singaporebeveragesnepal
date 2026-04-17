@@ -104,7 +104,13 @@ export function SiteHeader() {
           </nav>
 
           <div className="hidden items-center justify-end gap-3 lg:flex flex-1 lg:flex-none">
-            <div className="ml-2">
+            <div className="ml-2 flex items-center gap-2.5">
+              <Link
+                href="/bulk-order"
+                className="inline-flex h-10 items-center justify-center rounded-full border border-black/8 bg-white/82 px-5 text-sm font-semibold text-zinc-900 shadow-[0_12px_30px_-24px_rgba(24,24,27,0.25)] backdrop-blur-xl transition hover:border-black/12 hover:bg-white"
+              >
+                Bulk Order
+              </Link>
               <PrimaryButton
                 label="Become a Distributor"
                 href="/distributor"
@@ -128,7 +134,7 @@ export function SiteHeader() {
       <MobileNav
         open={isOpen}
         onClose={() => setIsOpen(false)}
-        links={NAV_LINKS}
+        links={[...NAV_LINKS, { href: "/bulk-order", label: "Bulk Order" }]}
         currentPath={pathname}
         accentColor={accentColor}
       />

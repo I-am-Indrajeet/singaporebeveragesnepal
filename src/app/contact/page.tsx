@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { ContactEnquiryForm } from "@/components/contact/ContactEnquiryForm";
 import { SchemaScript } from "@/components/shared/SchemaScript";
 import { BRAND, BRAND_PHONE_LINKS } from "@/config/brand";
 import { PageHero } from "@/components/shared/PageHero";
@@ -82,17 +83,7 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-          <form className="rounded-[2rem] border border-zinc-200 bg-white p-8">
-            <div className="grid gap-4">
-              <input className="rounded-full border border-zinc-200 px-5 py-3" placeholder="Full name" />
-              <input className="rounded-full border border-zinc-200 px-5 py-3" placeholder="Email address" />
-              <input className="rounded-full border border-zinc-200 px-5 py-3" placeholder="Phone number" />
-              <textarea className="min-h-[12rem] rounded-[1.5rem] border border-zinc-200 px-5 py-4" placeholder="How can we help?" />
-              <button type="submit" className="inline-flex h-12 items-center justify-center rounded-full bg-zinc-950 px-6 text-sm font-semibold text-white">
-                Send Enquiry
-              </button>
-            </div>
-          </form>
+          <ContactEnquiryForm />
         </section>
       </div>
     </main>

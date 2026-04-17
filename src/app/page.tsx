@@ -6,6 +6,8 @@ import CreatorCollaborationsSection from "@/components/sections/CreatorCollabora
 import { EventHighlight } from "@/components/sections/EventHighlight";
 import { FruitGamesSection } from "@/components/sections/FruitGamesSection";
 import { NewsPreview } from "@/components/sections/NewsPreview";
+import { SegmentedBusinessCTA } from "@/components/sections/SegmentedBusinessCTA";
+import { TrustSection } from "@/components/sections/TrustSection";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { buildLocalBusinessSchema } from "@/lib/seo/metadata";
 
@@ -25,6 +27,12 @@ export default function HomePage() {
       </AnimatedSection>
       <AnimatedSection delay={0.12} direction="up">
         <WhyChooseUs />
+      </AnimatedSection>
+      <AnimatedSection delay={0.14} direction="up">
+        <TrustSection />
+      </AnimatedSection>
+      <AnimatedSection delay={0.15} direction="up">
+        <SegmentedBusinessCTA />
       </AnimatedSection>
       <AnimatedSection delay={0.16} direction="up">
         <EventHighlight />

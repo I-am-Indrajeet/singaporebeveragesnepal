@@ -35,6 +35,7 @@ import { HeroThemeProvider } from "@/components/hero/HeroThemeContext";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteLoader } from "@/components/shared/SiteLoader";
+import { WhatsAppFloatingButton } from "@/components/shared/WhatsAppFloatingButton";
 
 export default function RootLayout({
   children,
@@ -55,6 +56,7 @@ export default function RootLayout({
             {children}
           </main>
           <SiteFooter />
+          <WhatsAppFloatingButton />
         </HeroThemeProvider>
       </body>
     </html>

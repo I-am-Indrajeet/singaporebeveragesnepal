@@ -84,11 +84,28 @@ export function MobileNav({
               })}
             </nav>
 
-            <PrimaryButton
-              label="Become a Distributor"
-              href="/distributor"
-              accentColor={accentColor}
-            />
+            <div className="mt-8 rounded-[1.8rem] border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/45">
+                Business Enquiries
+              </p>
+              <p className="mt-3 text-sm leading-6 text-white/70">
+                Choose the route that matches your supply, partnership, or trade requirement.
+              </p>
+              <div className="mt-4 grid gap-3">
+                <Link
+                  href="/bulk-order"
+                  onClick={onClose}
+                  className="inline-flex h-12 items-center justify-center rounded-full border border-white/12 bg-white/8 px-5 text-sm font-semibold text-white transition hover:bg-white/12"
+                >
+                  Bulk Order
+                </Link>
+                <PrimaryButton
+                  label="Become a Distributor"
+                  href="/distributor"
+                  accentColor={accentColor}
+                />
+              </div>
+            </div>
           </motion.aside>
         </>
       ) : null}
