@@ -26,6 +26,7 @@ export function TrustSection({ accentColor = "#FF8A00" }: TrustSectionProps) {
               title="Signals that help business buyers move faster."
               subtitle="Until verified partner testimonials are available, this section focuses on concrete reasons the portfolio and enquiry flow are easier to evaluate commercially."
               accentColor={accentColor}
+              titleColor="#FFFFFF"
             />
           </div>
 
