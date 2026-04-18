@@ -10,8 +10,11 @@ import { SegmentedBusinessCTA } from "@/components/sections/SegmentedBusinessCTA
 import { TrustSection } from "@/components/sections/TrustSection";
 import { WhyChooseUs } from "@/components/sections/WhyChooseUs";
 import { buildLocalBusinessSchema } from "@/lib/seo/metadata";
+import { getAllNews } from "@/lib/cms/content";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const newsItems = await getAllNews();
+
   return (
     <>
       <SchemaScript schema={buildLocalBusinessSchema()} />
@@ -38,7 +41,7 @@ export default function HomePage() {
         <EventHighlight />
       </AnimatedSection>
       <AnimatedSection delay={0.20} direction="up">
-        <NewsPreview />
+        <NewsPreview items={newsItems} />
       </AnimatedSection>
     </>
   );
