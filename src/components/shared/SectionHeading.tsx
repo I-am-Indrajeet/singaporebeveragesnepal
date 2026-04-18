@@ -7,6 +7,7 @@ export type SectionHeadingProps = {
   subtitle?: string;
   align?: "left" | "center";
   accentColor?: string;
+  titleColor?: string;
 };
 
 export function SectionHeading({
@@ -15,6 +16,7 @@ export function SectionHeading({
   subtitle,
   align = "left",
   accentColor,
+  titleColor,
 }: SectionHeadingProps) {
   const alignClass = align === "center" ? "text-center items-center" : "text-left";
 
@@ -28,7 +30,10 @@ export function SectionHeading({
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="font-heading text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[1.1] tracking-tighter text-zinc-950 drop-shadow-sm">
+      <h2
+        className="font-heading text-4xl md:text-5xl lg:text-[3.5rem] font-black leading-[1.1] tracking-tighter text-zinc-950 drop-shadow-sm"
+        style={titleColor ? { color: titleColor } : undefined}
+      >
         {title}
       </h2>
       {subtitle ? (
