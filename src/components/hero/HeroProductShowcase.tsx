@@ -15,13 +15,13 @@ import { HERO_PRODUCTS } from "@/data/products";
 
 const HERO_THEME_MAP = {
   jeeru: {
-    background: "#F5EFD9",
-    panel: "#CEDF8E",
-    accent: "#93B960",
-    halo: "#DCE8A9",
-    text: "#2B3327",
-    muted: "#55604A",
-    outline: "#A8BE7F",
+    background: "#F7E7D8",
+    panel: "#E3B27D",
+    accent: "#D88443",
+    halo: "#F1CC9E",
+    text: "#37281E",
+    muted: "#6C5645",
+    outline: "#D39B6C",
     badge: "Heavenly cumin",
   },
   "nimbu-pani": {

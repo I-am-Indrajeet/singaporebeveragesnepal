@@ -44,9 +44,9 @@ export const PRODUCTS: Product[] = [
     description:
       "Jeeru blends the earthy aroma of cumin with a gently sparkling finish for a beverage that feels both familiar and elevated. It is built to complement street food, heavy lunches, and the everyday moments when a bold drink cuts through the heat.",
     image: "/products/jeeru.png",
-    bgColor: "#C8913A",
-    bgColorDark: "#7A5520",
-    accentColor: "#F5C842",
+    bgColor: "#D4852A",
+    bgColorDark: "#8B4A10",
+    accentColor: "#F5A83C",
     textColor: "light",
     category: "flavoured",
     seoTitle: "Jeeru – Cumin Soft Drink Nepal | Singapore Beverages",
