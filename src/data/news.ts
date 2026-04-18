@@ -1,58 +1,77 @@
 import type { NewsPost } from "@/types/news";
 
 export const NEWS_POSTS: NewsPost[] = [
+  
   {
-    id: "retail-rollout-update",
-    slug: "retail-rollout-update",
-    title: "Retail rollout update for the Singapore Beverages portfolio",
+    id: "founder-interview-vision",
+    slug: "founder-interview-vision",
+    title: "Founder interview: building local beverage self-reliance",
     excerpt:
-      "The first wave of retail placement focuses on recognisable flavour profiles, premium mixer formats, and stronger in-store visibility.",
-    category: "Company",
-    publishDate: "2026-03-05",
-    coverImage: "/products/jeeru.png",
+      "Managing Director Dr. Aashish Sharma on Jeeru's success and making Nepal self-reliant in beverages.",
+    category: "Leadership",
+    publishDate: "2025-08-22",
+    coverImage: "/products/news/founder-interview.png",
     body: [
-      "Singapore Beverages is structuring its retail rollout around products that immediately communicate familiarity while still reading as premium on shelf.",
-      "Jeeru and Nimbu Pani anchor the flavoured range with local flavour recognition, while Club Soda, Ginger Ale, and Tonic Water expand placement into hospitality and modern grocery channels.",
-      "The rollout plan combines tighter colour systems, cleaner bottle presentation, and use-case messaging that helps retailers understand how the range fits into refreshment, pairing, and mixer occasions.",
+      "In an in-depth interview, Dr. Aashish Sharma reflects on the success of the Jeeru product and the company's mission to strengthen local manufacturing.",
+      "He outlines a vision for Nepalese self-reliance in the beverage sector driven by quality control, R&D, and investment in modern production facilities.",
+      "Sharma highlights the importance of skilled local teams and distribution expansion across all seven provinces to ensure nationwide availability.",
     ],
-    seoTitle: "Retail rollout update | Singapore Beverages Nepal",
+    seoTitle: "Founder interview & vision | Singapore Beverages Nepal",
     seoDescription:
-      "Latest retail rollout update for Singapore Beverages in Nepal, covering shelf strategy and product placement.",
+      "Managing Director Dr. Aashish Sharma discusses Jeeru's success and the vision for local beverage self-reliance.",
   },
   {
-    id: "mixers-range-spotlight",
-    slug: "mixers-range-spotlight",
-    title: "Mixers range spotlight: premium bar support in a retail-friendly format",
+    id: "forbes-feature",
+    slug: "forbes-feature",
+    title: "Regional spotlight: Singapore Beverages in Forbes India",
     excerpt:
-      "The mixers range is designed to serve both hospitality venues and consumers looking for cleaner, more premium at-home options.",
-    category: "Products",
-    publishDate: "2026-02-18",
-    coverImage: "/products/tonic-water.png",
+      "A Forbes India feature highlights the Sharma family's leadership and innovation in Nepal's FMCG space.",
+    category: "Press",
+    publishDate: "2022-01-28",
+    coverImage: "/products/news/forbes-feature.png",
     body: [
-      "The mixers range brings together Club Soda, Ginger Ale, and Tonic Water with a focus on dependable carbonation and more polished presentation.",
-      "For horeca operators, the range supports straightforward cocktail and food-pairing service. For retail, it introduces more premium behaviour without losing accessibility.",
-      "The portfolio is intentionally balanced so the same products can work across bars, restaurants, hotels, and modern convenience environments.",
+      "Forbes India profiled the company's leadership, chronicling the Sharma family's entrepreneurial journey and strategy for innovation in FMCG.",
+      "The piece recognises how focused leadership and long-term investment enabled the company to modernise production and expand its product portfolio.",
+      "The feature underlines the firm's regional ambitions and efforts to position Nepalese brands on a larger South Asian stage.",
     ],
-    seoTitle: "Mixers range spotlight | Singapore Beverages Nepal",
+    seoTitle: "Forbes India feature | Singapore Beverages Nepal",
     seoDescription:
-      "Explore how the Singapore Beverages mixers range supports hospitality venues and retail shelves in Nepal.",
+      "A regional Forbes India profile of Singapore Beverages Nepal and the company's leadership in FMCG innovation.",
   },
   {
-    id: "distribution-roadmap",
-    slug: "distribution-roadmap",
-    title: "Distribution roadmap for retail, horeca, and event supply",
+    id: "financial-market-growth",
+    slug: "financial-market-growth",
+    title: "Financial report: strong growth and expanding distribution",
     excerpt:
-      "The next stage of growth prioritises distributor partnerships, channel clarity, and scalable supply planning for Nepal.",
-    category: "Partners",
-    publishDate: "2026-01-27",
-    coverImage: "/products/club-soda.png",
+      "Infomerics Nepal report highlights 22–24% growth and wider distribution across Nepal.",
+    category: "Finance",
+    publishDate: "2024-03-15",
+    coverImage: "/products/news/financial-market-growth.png",
     body: [
-      "Singapore Beverages is building its distributor roadmap around channel-specific demand: retail velocity, hospitality consistency, and event-ready fulfilment.",
-      "This roadmap includes a clearer partner onboarding flow, stronger product storytelling for sales teams, and a more practical way to position the portfolio by use case.",
-      "The goal is simple: make it easier for partners to understand where each product wins and how the full range supports business growth.",
+      "An independent credit rating and financial report detailed a 22–24% growth rate, expanded distribution across all seven provinces, and rising export activity.",
+      "The report credits capital investment in modern factory operations and improved supply-chain capabilities for enabling rapid scaling.",
+      "Management says the company will continue prioritising financial discipline while funding capacity and market expansion.",
     ],
-    seoTitle: "Distribution roadmap | Singapore Beverages Nepal",
+    seoTitle: "Financial growth report | Singapore Beverages Nepal",
     seoDescription:
-      "Read the Singapore Beverages distribution roadmap for retail, horeca, and event supply growth in Nepal.",
+      "Infomerics Nepal report summarising Singapore Beverages Nepal's growth, distribution expansion, and export activities.",
+  },
+  {
+    id: "business360-factory-feature",
+    slug: "business360-factory-feature",
+    title: "Factory operations and tech: Business 360 profile",
+    excerpt:
+      "A Business 360 feature covers factory operations in Jhapa and the company's commitment to modern technology.",
+    category: "Operations",
+    publishDate: "2023-06-10",
+    coverImage: "/products/ginger-ale.png",
+    body: [
+      "Business 360 published an in-depth profile highlighting the company's factory in Jhapa and its adoption of modern production technology.",
+      "The article emphasises quality assurance, process automation, and the company's drive to meet international standards locally.",
+      "Operational leaders describe how investments in plant and talent support growing domestic demand and emerging export opportunities.",
+    ],
+    seoTitle: "Business 360 factory feature | Singapore Beverages Nepal",
+    seoDescription:
+      "Business 360 profile on factory operations in Jhapa and the company's emphasis on modern production technology.",
   },
 ];

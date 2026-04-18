@@ -1,39 +1,41 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
+import type { NewsPost } from "@/types/news";
 
-type NewsItemType = {
-  id: string;
-  category: string;
-  title: string;
-  excerpt: string;
-  date: string;
-};
+type NewsItemType = NewsPost & { date?: string };
 
 export function NewsPreview({ items = [] }: { items?: NewsItemType[] }) {
   const displayItems = items.length >= 3 ? items.slice(0, 3) : [
     {
       id: "1",
+      slug: "production-capacity-update",
       category: "Press Release",
       title: "Singapore Beverages expands production capacity to meet growing nationwide demand.",
       excerpt: "A new state-of-the-art facility will increase output by 40%, ensuring smoother peak-season fulfillment.",
-      date: "Oct 12, 2026"
+      publishDate: "Oct 12, 2026",
+      coverImage: "/products/jeeru.png"
     },
     {
       id: "2",
+      slug: "kathmandu-culinary-festival",
       category: "Event",
       title: "Sponsoring the Kathmandu Culinary Festival",
       excerpt: "Join us as we pair our newest mixer range with top-tier local street food vendors.",
-      date: "Sep 28, 2026"
+      publishDate: "Sep 28, 2026",
+      coverImage: "/products/tonic-water.png"
     },
     {
       id: "3",
+      slug: "reformulated-ginger-ale",
       category: "Product",
       title: "Introducing the reformulated Ginger Ale",
       excerpt: "A bolder bite engineered specifically for the thriving local bar and cocktail scene.",
-      date: "Sep 15, 2026"
+      publishDate: "Sep 15, 2026",
+      coverImage: "/products/ginger-ale.png"
     }
   ];
 
@@ -63,7 +65,7 @@ export function NewsPreview({ items = [] }: { items?: NewsItemType[] }) {
         {/* 3-Column Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {displayItems.map((item, idx) => (
-            <Link href={`/news/${item.id}`} key={item.id} className="group outline-none block h-full">
+            <Link href={`/news/${item.slug ?? item.id}`} key={item.id} className="group outline-none block h-full">
               <motion.article 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -72,19 +74,25 @@ export function NewsPreview({ items = [] }: { items?: NewsItemType[] }) {
                 whileHover={{ y: -8 }}
                 className="flex h-full flex-col overflow-hidden rounded-[2rem] border border-zinc-200 bg-white shadow-sm transition-all duration-400 group-hover:border-[#FF8A00]/30 group-hover:shadow-[0_20px_40px_-15px_rgba(255,138,0,0.15)]"
               >
-                <div className="relative h-48 w-full bg-zinc-100 overflow-hidden">
-                   <div className="absolute inset-0 bg-gradient-to-tr from-zinc-200 to-zinc-100 transition-transform duration-700 group-hover:scale-105" />
-                   <div className="absolute left-4 top-4">
-                     <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-zinc-900 backdrop-blur-md">
-                       {item.category}
-                     </span>
-                   </div>
+                <div className="relative h-48 w-full overflow-hidden bg-zinc-100">
+                  <Image
+                    src={item.coverImage ?? "/products/jeeru.png"}
+                    alt={item.title}
+                    fill
+                    className="object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                  <div className="absolute left-4 top-4">
+                    <span className="inline-flex rounded-full bg-white/90 px-3 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-zinc-900 backdrop-blur-md">
+                      {item.category}
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
                   <div>
                     <span className="text-xs font-medium tracking-wide text-zinc-400 font-mono">
-                      {item.date}
+                      {item.publishDate}
                     </span>
                     <h3 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-zinc-900 group-hover:text-[#FF8A00] transition-colors duration-300">
                       {item.title}
