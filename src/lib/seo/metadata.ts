@@ -30,6 +30,11 @@ export function buildMetadata(opts: {
     description: opts.description,
     keywords: opts.keywords,
     alternates: { canonical: url },
+    icons: {
+      icon: "/brand/favicon.png",
+      shortcut: "/brand/favicon.png",
+      apple: "/brand/favicon.png",
+    },
     openGraph: {
       title: opts.title,
       description: opts.description,
