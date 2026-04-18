@@ -12,24 +12,30 @@ export function NewsPreview({ items = [] }: { items?: NewsItemType[] }) {
   const displayItems = items.length >= 3 ? items.slice(0, 3) : [
     {
       id: "1",
+      slug: "production-capacity-update",
       category: "Press Release",
       title: "Singapore Beverages expands production capacity to meet growing nationwide demand.",
       excerpt: "A new state-of-the-art facility will increase output by 40%, ensuring smoother peak-season fulfillment.",
-      date: "Oct 12, 2026"
+      publishDate: "Oct 12, 2026",
+      coverImage: "/products/jeeru.png"
     },
     {
       id: "2",
+      slug: "kathmandu-culinary-festival",
       category: "Event",
       title: "Sponsoring the Kathmandu Culinary Festival",
       excerpt: "Join us as we pair our newest mixer range with top-tier local street food vendors.",
-      date: "Sep 28, 2026"
+      publishDate: "Sep 28, 2026",
+      coverImage: "/products/tonic-water.png"
     },
     {
       id: "3",
+      slug: "reformulated-ginger-ale",
       category: "Product",
       title: "Introducing the reformulated Ginger Ale",
       excerpt: "A bolder bite engineered specifically for the thriving local bar and cocktail scene.",
-      date: "Sep 15, 2026"
+      publishDate: "Sep 15, 2026",
+      coverImage: "/products/ginger-ale.png"
     }
   ];
 
@@ -86,7 +92,7 @@ export function NewsPreview({ items = [] }: { items?: NewsItemType[] }) {
                 <div className="flex flex-1 flex-col justify-between p-6 md:p-8">
                   <div>
                     <span className="text-xs font-medium tracking-wide text-zinc-400 font-mono">
-                      {item.publishDate ?? item.date}
+                      {item.publishDate}
                     </span>
                     <h3 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight text-zinc-900 group-hover:text-[#FF8A00] transition-colors duration-300">
                       {item.title}
