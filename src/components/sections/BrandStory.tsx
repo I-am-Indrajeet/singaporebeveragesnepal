@@ -106,6 +106,7 @@ export function BrandStory() {
                       fill
                       className="object-contain object-bottom"
                       sizes="(max-width: 768px) 232px, 256px"
+                      loading="lazy"
                     />
                   </motion.div>
                 </div>

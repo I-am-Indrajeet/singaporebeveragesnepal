@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Dancing_Script } from "next/font/google";
 
 import "@/styles/globals.css";
 import { SchemaScript } from "@/components/shared/SchemaScript";
@@ -16,6 +16,13 @@ const inter = Inter({
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-heading",
+  display: "swap",
+});
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  variable: "--font-script",
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -45,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(inter.variable, playfairDisplay.variable, "scroll-smooth")}
+      className={cn(inter.variable, playfairDisplay.variable, dancingScript.variable, "scroll-smooth")}
     >
       <body className="bg-background font-sans text-foreground antialiased relative">
         <SchemaScript schema={buildOrganizationSchema()} />

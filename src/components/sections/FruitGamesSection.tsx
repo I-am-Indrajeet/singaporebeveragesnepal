@@ -103,9 +103,60 @@ export function FruitGamesSection() {
     },
   };
 
+  // ── Mobile-specific carousel variants (narrower offsets) ──
+  const mobileCarouselVariants = {
+    center: {
+      x: 0,
+      y: 0,
+      scale: 1,
+      zIndex: 10,
+      opacity: 1,
+      filter: "blur(0px)",
+      transition: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
+    },
+    left1: {
+      x: "-65%",
+      y: "0.5rem",
+      scale: 0.8,
+      zIndex: 5,
+      opacity: 0.6,
+      filter: "blur(1px)",
+      transition: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
+    },
+    right1: {
+      x: "65%",
+      y: "0.5rem",
+      scale: 0.8,
+      zIndex: 5,
+      opacity: 0.6,
+      filter: "blur(1px)",
+      transition: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
+    },
+    left2: { x: "-120%", y: "1rem", scale: 0.6, zIndex: 2, opacity: 0, transition: { duration: 0.5 } },
+    right2: { x: "120%", y: "1rem", scale: 0.6, zIndex: 2, opacity: 0, transition: { duration: 0.5 } },
+    hiddenLeft: { x: "-150%", y: "1rem", scale: 0.5, zIndex: 1, opacity: 0, transition: { duration: 0.5 } },
+    hiddenRight: { x: "150%", y: "1rem", scale: 0.5, zIndex: 1, opacity: 0, transition: { duration: 0.5 } },
+  };
+
+  /**
+   * Generate a lighter tint of the fruit color for inactive card backgrounds.
+   * This creates a harmonious palette where each card's "resting" background
+   * subtly hints at its fruit identity rather than using a generic beige.
+   */
+  function getLightTint(hexColor: string): string {
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+    // Mix 88% white + 12% fruit color for a gentle, accessible tint
+    const lr = Math.round(r * 0.12 + 255 * 0.88);
+    const lg = Math.round(g * 0.12 + 255 * 0.88);
+    const lb = Math.round(b * 0.12 + 255 * 0.88);
+    return `rgb(${lr}, ${lg}, ${lb})`;
+  }
+
   return (
     <motion.div
-      className={`${SPACING.sectionY} pt-32 md:pt-48 relative overflow-hidden`}
+      className={`${SPACING.sectionY} pt-20 md:pt-48 relative overflow-hidden`}
       animate={{ backgroundColor: activeProduct.bgLight }}
       transition={{ duration: 0.8, ease: "easeInOut" }}
     >
@@ -118,21 +169,22 @@ export function FruitGamesSection() {
       <div className={`${SPACING.containerX} relative z-10 mx-auto max-w-[90rem]`}>
         <motion.div className="relative z-0 flex flex-col items-center justify-center text-center">
           <motion.div
-            className="mb-8 inline-block rounded-full px-8 py-2.5 shadow-lg"
+            className="mb-6 md:mb-8 inline-block rounded-full px-6 md:px-8 py-2 md:py-2.5 shadow-lg"
             animate={{ backgroundColor: activeProduct.color }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="font-heading text-xl font-black uppercase tracking-widest text-white drop-shadow-md md:text-2xl">
+            <h2 className="font-heading text-lg md:text-xl font-black uppercase tracking-widest text-white drop-shadow-md lg:text-2xl">
               Fruit Gems Collection
             </h2>
           </motion.div>
 
-          <h3 className="font-heading text-5xl font-black tracking-tighter text-[#3E2723] drop-shadow-[0_10px_15px_rgba(62,39,35,0.2)] md:text-7xl">
+          <h3 className="font-heading text-3xl md:text-5xl font-black tracking-tighter text-[#3E2723] drop-shadow-[0_10px_15px_rgba(62,39,35,0.2)] lg:text-7xl px-4">
             Vibrant flavours for a <br className="hidden md:block" /> vibrant life.
           </h3>
         </motion.div>
 
-        <div className="relative -mt-10 flex h-[40rem] w-full items-center justify-center z-10">
+        {/* ── Desktop Carousel ── */}
+        <div className="relative -mt-10 hidden md:flex h-[40rem] w-full items-center justify-center z-10">
           {FRUIT_GAMES_PRODUCTS.map((product, index) => {
             const pos = getPositionVariant(index);
             const isCenter = pos === "center";
@@ -153,17 +205,18 @@ export function FruitGamesSection() {
                 <motion.div
                   className="relative flex flex-col rounded-[2.5rem] px-6 pb-8 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.12)] transition-colors duration-700 w-[19rem] h-[26rem]"
                   animate={{
-                    backgroundColor: isCenter ? product.color : "#FDEBD0",
+                    backgroundColor: isCenter ? product.color : getLightTint(product.color),
                   }}
                 >
-                  {/* Floating Product Image - Absolutely positioned sticking out of the top */}
+                  {/* Floating Product Image */}
                   <div className="absolute -top-24 left-1/2 flex h-[19rem] w-[13rem] -translate-x-1/2 justify-center drop-shadow-[0_20px_35px_rgba(0,0,0,0.25)]">
                     <Image
                       src={product.image}
                       alt={product.name}
                       fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
+                      sizes="(max-width: 768px) 60vw, 208px"
                       className="object-contain"
+                      loading="lazy"
                     />
                   </div>
 
@@ -197,7 +250,7 @@ export function FruitGamesSection() {
                     )}
                   </AnimatePresence>
 
-                  {/* Card Content Wrapper to push below image */}
+                  {/* Card Content */}
                   <div className="flex flex-1 flex-col mt-[14.5rem] items-center text-center">
                     <motion.h3
                       className="font-heading text-3xl font-extrabold tracking-tight"
@@ -220,6 +273,87 @@ export function FruitGamesSection() {
               </motion.div>
             );
           })}
+        </div>
+
+        {/* ── Mobile Carousel ── */}
+        <div className="relative mt-6 flex md:hidden h-[26rem] w-full items-center justify-center z-10">
+          {FRUIT_GAMES_PRODUCTS.map((product, index) => {
+            const pos = getPositionVariant(index);
+            const isCenter = pos === "center";
+
+            return (
+              <motion.div
+                key={product.id}
+                className="absolute flex flex-col"
+                variants={mobileCarouselVariants}
+                initial={false}
+                animate={pos}
+                onClick={() => {
+                  if (pos === "left1") handlePrev();
+                  if (pos === "right1") handleNext();
+                }}
+                style={{ cursor: isCenter ? "default" : "pointer" }}
+              >
+                <motion.div
+                  className="relative flex flex-col rounded-[2rem] px-4 pb-6 shadow-[0_16px_40px_-8px_rgba(0,0,0,0.15)] transition-colors duration-500 w-[14rem] h-[20rem]"
+                  animate={{
+                    backgroundColor: isCenter ? product.color : getLightTint(product.color),
+                  }}
+                >
+                  {/* Floating Product Image */}
+                  <div className="absolute -top-16 left-1/2 flex h-[14rem] w-[10rem] -translate-x-1/2 justify-center drop-shadow-[0_16px_30px_rgba(0,0,0,0.22)]">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      sizes="160px"
+                      className="object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="flex flex-1 flex-col mt-[11rem] items-center text-center">
+                    <motion.h3
+                      className="font-heading text-xl font-extrabold tracking-tight"
+                      animate={{ color: isCenter ? "#FFFFFF" : "#5A4432" }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {product.name}
+                    </motion.h3>
+
+                    <motion.p
+                      className="mt-2 px-1 text-xs font-medium leading-snug"
+                      animate={{ color: isCenter ? "rgba(255,255,255,0.9)" : "#7C634F" }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <span className="block font-bold">{product.tagline}</span>
+                    </motion.p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* ── Mobile swipe arrows ── */}
+        <div className="flex md:hidden justify-center gap-6 mt-4 mb-8">
+          <button 
+            onClick={handlePrev}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-zinc-700 shadow-md backdrop-blur-sm transition hover:bg-white"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button 
+            onClick={handleNext}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-white/80 text-zinc-700 shadow-md backdrop-blur-sm transition hover:bg-white"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </div>
     </motion.div>

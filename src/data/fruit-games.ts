@@ -59,7 +59,7 @@ export const FRUIT_GAMES_PRODUCTS: FruitGamesFlavor[] = [
   {
     id: "fruit-gems-mango",
     name: "Mango",
-    image: "/products/fruit-gems-mango-drink.png",
+    image: "/products/naturals-mango-drink-can.png",
     color: "#F39C12", // Mango Yellow
     bgLight: "#FEF9E7",
     tagline: "The King of Fruits",

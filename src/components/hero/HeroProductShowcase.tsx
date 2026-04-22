@@ -1,158 +1,327 @@
 "use client";
 
+import React, { useMemo, useState, useCallback } from "react";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
-
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useTransform,
+} from "framer-motion";
 
-import { HeroBackgroundShapes } from "@/components/hero/HeroBackgroundShapes";
+import { HeroAnimatedBackground } from "@/components/hero/HeroBackgroundShapes";
 import { useHeroTheme } from "@/components/hero/HeroThemeContext";
 import { ProductSwitcher } from "@/components/hero/ProductSwitcher";
-import { PrimaryButton } from "@/components/shared/PrimaryButton";
-import { SecondaryButton } from "@/components/shared/SecondaryButton";
 import { HERO_PRODUCTS } from "@/data/products";
+import { HERO_PRODUCT_CONFIGS } from "@/data/hero-configs";
+import {
+  useCursorParallax,
+  getDepthMultipliers,
+} from "@/hooks/useCursorParallax";
+import type { HeroAsset, HeroProductConfig } from "@/types/hero-product";
+
+// ============================================================================
+// THEME MAP — text/UI colors + heading data keyed by product slug
+// ============================================================================
 
 const HERO_THEME_MAP = {
   jeeru: {
-    background: "#F7E7D8",
+    background: "#4A1F12",
     panel: "#E3B27D",
-    accent: "#D88443",
-    halo: "#F1CC9E",
-    text: "#37281E",
-    muted: "#6C5645",
+    accent: "#F5A83C",
+    halo: "#c27040",
+    text: "#FFF3E0",
+    muted: "#E0C4A8",
     outline: "#D39B6C",
     badge: "Heavenly cumin",
+    headingLine1: "PURE",
+    headingLine2: "JEERU",
+    watermark: "JEERU",
   },
   "nimbu-pani": {
-    background: "#F7F3D7",
+    background: "#589e00",
     panel: "#D8E78A",
-    accent: "#A7C95B",
+    accent: "#FFFFFF",
     halo: "#E6F0AF",
-    text: "#2E3722",
+    text: "#D11111",
     muted: "#59644A",
     outline: "#BDD177",
     badge: "Bright lemon lift",
+    headingLine1: "NIMBU",
+    headingLine2: "PANI",
+    watermark: "NIMBU",
   },
   "ginger-ale": {
-    background: "#F7E7D8",
-    panel: "#E8BC87",
-    accent: "#D88443",
-    halo: "#F1CC9E",
-    text: "#37281E",
-    muted: "#6C5645",
-    outline: "#D39B6C",
+    background: "#2a7a2a",
+    panel: "#6dcf6d",
+    accent: "#b8f060",
+    halo: "#6dcf6d",
+    text: "#f0ffe8",
+    muted: "#c8f0a0",
+    outline: "#5ab85a",
     badge: "Warm ginger spark",
+    headingLine1: "GINGER",
+    headingLine2: "ALE",
+    watermark: "GINGER",
   },
   "club-soda": {
-    background: "#EEF2EE",
-    panel: "#C7D8C9",
-    accent: "#7EA28B",
-    halo: "#D7E4D8",
-    text: "#24322C",
-    muted: "#586760",
-    outline: "#98B7A0",
-    badge: "Pure crisp balance",
+    background: "#F8FAF9",
+    panel: "#F6F9FA",
+    accent: "#0A2540",
+    halo: "#FFFFFF",
+    text: "#0A2540",
+    muted: "#5B7586",
+    outline: "#D1DDE5",
+    badge: "Clean & Crisp",
+    headingLine1: "CLUB",
+    headingLine2: "SODA",
+    watermark: "SODA",
   },
   "tonic-water": {
-    background: "#E7EEE9",
-    panel: "#BFD9C9",
-    accent: "#5C9E88",
-    halo: "#D2E7DB",
-    text: "#21312D",
-    muted: "#546864",
-    outline: "#84B7A4",
-    badge: "Botanical bitter lift",
+    background: "#F7E56D",
+    panel: "#8CD1C8",
+    accent: "#1A4D3E",
+    halo: "#FFFFFF",
+    text: "#1A4D3E",
+    muted: "#5B7586",
+    outline: "#D1DDE5",
+    badge: "Premium London Dry",
+    headingLine1: "TONIC",
+    headingLine2: "WATER",
+    watermark: "TONIC",
+  },
+  "mango-drink": {
+    background: "#E89B42",
+    panel: "#FFD685",
+    accent: "#B04000",
+    halo: "#F2A65A",
+    text: "#FFF2E5",
+    muted: "#F5C7A1",
+    outline: "#D47A22",
+    badge: "Tasty & Healthy",
+    headingLine1: "MANGO",
+    headingLine2: "DRINK",
+    watermark: "MANGO",
   },
 } as const;
 
-const imageVariants = {
-  enter: {
-    x: 150,
-    opacity: 0,
-    scale: 1.1,
-    rotateY: 15,
-    filter: "drop-shadow(20px 40px 60px rgba(0,0,0,0))",
-  },
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    rotateY: 0,
-    filter: "drop-shadow(0 30px 50px rgba(45,37,26,0.18))",
-    transition: {
-      duration: 0.8,
-      ease: [0.17, 0.67, 0.16, 0.99],
-    },
-  },
-  exit: {
-    x: -150,
-    opacity: 0,
-    scale: 0.9,
-    rotateY: -15,
-    filter: "drop-shadow(-20px 40px 60px rgba(0,0,0,0))",
-    transition: {
-      duration: 0.5,
-      ease: [0.17, 0.67, 0.16, 0.99],
-    },
-  },
-};
+// ============================================================================
+// EASING
+// ============================================================================
+
+const EASE_ENTRANCE = [0.25, 0.46, 0.45, 0.94] as const;
+
+// ============================================================================
+// TEXT ANIMATION VARIANTS
+// ============================================================================
 
 const fadeSlideVariants = {
-  enter: { y: 18, opacity: 0 },
-  center: { y: 0, opacity: 1, transition: { duration: 0.42, delay: 0.08 } },
-  exit: { y: -12, opacity: 0, transition: { duration: 0.22 } },
+  enter: { y: 24, opacity: 0 },
+  center: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5, delay: 0.1, ease: "easeOut" },
+  },
+  exit: { y: -16, opacity: 0, transition: { duration: 0.25 } },
 };
+
+// ============================================================================
+// SUB-COMPONENT: Individual Asset Element with Parallax
+// ============================================================================
+
+interface AssetElementProps {
+  item: HeroAsset;
+  smoothX: ReturnType<typeof useCursorParallax>["smoothX"];
+  smoothY: ReturnType<typeof useCursorParallax>["smoothY"];
+  isFirstProduct?: boolean;
+}
+
+function AssetElement({ item, smoothX, smoothY, isFirstProduct = false }: AssetElementProps) {
+  const multipliers = getDepthMultipliers(item.depth);
+
+  const parallaxX = useTransform(
+    smoothX,
+    [-1, 1],
+    [-multipliers.x, multipliers.x],
+  );
+  const parallaxY = useTransform(
+    smoothY,
+    [-1, 1],
+    [-multipliers.y, multipliers.y],
+  );
+  const parallaxRotate = useTransform(
+    smoothX,
+    [-1, 1],
+    [-multipliers.rotate, multipliers.rotate],
+  );
+
+  const wBase = typeof item.width === "string" ? item.width : item.width.base;
+  const wMd = typeof item.width === "string" ? item.width : item.width.md;
+  const wLg = typeof item.width === "string" ? item.width : item.width.lg;
+
+  const exitAnim = item.exit
+    ? {
+        opacity: item.exit.opacity,
+        x: item.exit.x ?? 0,
+        y: item.exit.y ?? 0,
+        scale: item.exit.scale ?? 1,
+      }
+    : {
+        opacity: 0,
+        x: -(item.entrance.x?.[0] ?? 0) * 0.5,
+        y: -(item.entrance.y?.[0] ?? 0) * 0.5,
+        scale: 0.95,
+      };
+
+  return (
+    <div
+      className="absolute pointer-events-none w-[var(--w-base)] md:w-[var(--w-md)] lg:w-[var(--w-lg)]"
+      style={
+        {
+          "--w-base": wBase,
+          "--w-md": wMd,
+          "--w-lg": wLg,
+          left: item.left,
+          top: item.top,
+          zIndex: item.zIndex,
+          transform: "translate(-50%, -50%)",
+          ...(item.height ? { height: item.height } : {}),
+        } as React.CSSProperties
+      }
+    >
+      {/* Layer 1: Cursor parallax — GPU-only transforms via motion values */}
+      <motion.div
+        className="w-full h-full"
+        style={{
+          x: parallaxX,
+          y: parallaxY,
+          rotate: parallaxRotate,
+        }}
+      >
+        {/* Layer 2: Entrance/exit transitions */}
+        <motion.div
+          className="w-full h-full"
+          initial={{
+            opacity: item.entrance.opacity?.[0] ?? 0,
+            x: item.entrance.x?.[0] ?? 0,
+            y: item.entrance.y?.[0] ?? 0,
+            scale: item.entrance.scale?.[0] ?? 1,
+            rotate: item.baseRotate ?? 0,
+          }}
+          animate={{
+            opacity: item.entrance.opacity?.[1] ?? 1,
+            x: item.entrance.x?.[1] ?? 0,
+            y: item.entrance.y?.[1] ?? 0,
+            scale: item.entrance.scale?.[1] ?? 1,
+            rotate: item.baseRotate ?? 0,
+          }}
+          exit={{
+            ...exitAnim,
+            rotate: item.baseRotate ?? 0,
+          }}
+          transition={{
+            duration: item.entrance.duration,
+            delay: item.entrance.delay,
+            ease: [...EASE_ENTRANCE],
+          }}
+        >
+          {/* Layer 3: Continuous idle floating — organic subtle life */}
+          <motion.div
+            className="w-full h-full"
+            animate={
+              item.idle
+                ? {
+                    y: item.idle.y,
+                    rotate: item.idle.rotate,
+                  }
+                : {}
+            }
+            transition={
+              item.idle
+                ? {
+                    duration: item.idle.duration,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: item.entrance.delay + item.entrance.duration,
+                  }
+                : {}
+            }
+          >
+            {/* Render: shadow div or image */}
+            {item.isShadow ? (
+              <div
+                className="w-full h-full rounded-full"
+                style={{ ...item.style }}
+              />
+            ) : (
+              <div
+                className="w-full h-auto"
+                style={{
+                  opacity: item.opacity ?? 1,
+                  filter: item.dropShadow,
+                }}
+              >
+                <Image
+                  src={item.src!}
+                  alt={item.alt!}
+                  width={800}
+                  height={800}
+                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 60vw, 50vw"
+                  className="w-full h-auto"
+                  priority={isFirstProduct && item.priority}
+                  loading={isFirstProduct ? undefined : "lazy"}
+                  unoptimized={isFirstProduct && item.priority}
+                />
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ============================================================================
+// MAIN COMPONENT: HeroProductShowcase
+// ============================================================================
 
 export function HeroProductShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const { setAccentColor, setBackgroundColor } = useHeroTheme();
   const reduceMotion = useReducedMotion();
-  const activeProduct = HERO_PRODUCTS[activeIndex];
-  const theme = HERO_THEME_MAP[activeProduct.slug as keyof typeof HERO_THEME_MAP];
+  const { smoothX, smoothY, containerRef } = useCursorParallax();
 
-  useEffect(() => {
+  const activeProduct = HERO_PRODUCTS[activeIndex];
+  const theme =
+    HERO_THEME_MAP[activeProduct.slug as keyof typeof HERO_THEME_MAP];
+
+  // Find matching hero product config for the centered product display
+  const activeHeroConfig: HeroProductConfig | undefined =
+    HERO_PRODUCT_CONFIGS.find((c) => c.id === activeProduct.slug);
+
+  // Memoize sorted assets by z-index for correct paint order
+  const sortedAssets = useMemo(
+    () =>
+      activeHeroConfig
+        ? [...activeHeroConfig.assets].sort((a, b) => a.zIndex - b.zIndex)
+        : [],
+    [activeHeroConfig],
+  );
+
+  // Update theme context for header/nav color adaptation
+  React.useEffect(() => {
     setAccentColor(theme.accent);
     setBackgroundColor(theme.background);
   }, [setAccentColor, setBackgroundColor, theme.accent, theme.background]);
 
-  const heroStyle = useMemo(
-    () =>
-      ({
-        ["--accent" as string]: theme.accent,
-        ["--bg-product" as string]: theme.background,
-        ["--text-product" as string]: theme.text,
-        backgroundColor: theme.background,
-      }) satisfies React.CSSProperties,
-    [theme.accent, theme.background, theme.text],
+  const handleSelect = useCallback(
+    (index: number) => {
+      if (index === activeIndex) return;
+      setActiveIndex(index);
+    },
+    [activeIndex],
   );
-
-  const handleSelect = (index: number) => {
-    if (index === activeIndex) {
-      return;
-    }
-    setActiveIndex(index);
-  };
-
-  const floatAnimation = reduceMotion
-    ? { y: 0, rotate: 0 }
-    : {
-        y: [0, -8, 0],
-        rotate: [0, -1.4, 0],
-        transition: {
-          duration: 4.2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        },
-      };
-
-  const imageMotionVariants = reduceMotion
-    ? {
-        enter: { opacity: 0 },
-        center: { opacity: 1, transition: { duration: 0 } },
-        exit: { opacity: 0, transition: { duration: 0 } },
-      }
-    : imageVariants;
 
   const contentVariants = reduceMotion
     ? {
@@ -162,191 +331,277 @@ export function HeroProductShowcase() {
       }
     : fadeSlideVariants;
 
+  // Determine the active background theme for the AnimatedBackground
+  const bgTheme = activeHeroConfig?.theme ?? {
+    bgPrimary: theme.background,
+    bgSecondary: theme.panel,
+    bgTertiary: theme.accent,
+    glowColor: theme.halo,
+    glowOpacity: 0.4,
+    vignetteOpacity: 0.2,
+    accentText: theme.text,
+  };
+
+  const slideNumber = String(activeIndex + 1).padStart(2, "0");
+
   return (
-    <motion.section
-      className="relative overflow-hidden"
-      style={heroStyle}
-      animate={{ backgroundColor: theme.background }}
-      transition={{ duration: reduceMotion ? 0 : 0.5, ease: "easeInOut" }}
+    <section
+      ref={containerRef as React.RefObject<HTMLElement>}
+      className="relative overflow-hidden h-screen"
     >
-      <HeroBackgroundShapes
-        backgroundColor={theme.background}
-        accentColor={theme.accent}
-        haloColor={theme.halo}
-        panelColor={theme.panel}
+      {/* ─── Animated Background Gradient + Glow + Vignette ─── */}
+      <HeroAnimatedBackground
+        theme={bgTheme}
+        productId={activeProduct.slug}
       />
 
-      {/* Hidden preloader for all product variations to ensure zero-latency switching after loader */}
-      <div className="absolute opacity-0 pointer-events-none z-[-1] overflow-hidden w-px h-px">
-        {HERO_PRODUCTS.map((product) => (
-          <Image
-            key={`preload-${product.id}`}
-            src={product.image}
-            alt="preload"
-            width={950}
-            height={1600}
-            priority
-          />
-        ))}
+      {/* ─── Background Watermark Text (desktop only) ─── */}
+      <div
+        className="absolute inset-0 overflow-hidden pointer-events-none select-none hidden md:block"
+        aria-hidden="true"
+        style={{ zIndex: 2 }}
+      >
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={`wm-${activeProduct.slug}`}
+            className="absolute font-sans font-black uppercase whitespace-nowrap"
+            style={{
+              fontSize: "clamp(160px, 22vw, 320px)",
+              lineHeight: 0.85,
+              letterSpacing: "-0.04em",
+              right: "-3%",
+              top: "8%",
+              color: theme.text,
+            }}
+            initial={{ opacity: 0, x: 70 }}
+            animate={{
+              opacity: 0.07,
+              x: 0,
+              transition: { duration: 1.0, ease: "easeOut" },
+            }}
+            exit={{
+              opacity: 0,
+              x: -50,
+              transition: { duration: 0.3 },
+            }}
+          >
+            {theme.watermark}
+          </motion.span>
+        </AnimatePresence>
       </div>
 
-      <div className="relative mx-auto min-h-screen max-w-[92rem] px-5 pb-10 pt-14 md:px-8 md:pb-12 md:pt-18 lg:px-10 lg:pt-22">
-        <div className="grid min-h-[calc(100vh-9rem)] gap-10 lg:grid-cols-[1fr_1.2fr] lg:items-center">
-          {/* Left Column: Text Content */}
-          <div className="relative z-10 flex flex-col items-center justify-center text-center lg:items-start lg:text-left">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={`${activeProduct.id}-copy`}
-                className="max-w-[40rem]"
-                variants={contentVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
+      {/* ─── Main Content Layer ─── */}
+      <div className="relative h-full" style={{ zIndex: 10 }}>
+
+        {/* ─── MOBILE: Centered product name above product ─── */}
+        <div className="md:hidden absolute z-20 left-0 right-0 top-[8%] flex flex-col items-center text-center px-6">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={`mobile-copy-${activeProduct.slug}`}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } }}
+              exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
+            >
+              <h1
+                className="font-sans font-black uppercase tracking-[-0.04em] leading-[0.88]"
+                style={{
+                  color: theme.text,
+                  fontSize: "clamp(2.6rem, 12vw, 4.5rem)",
+                  textShadow: "0 4px 20px rgba(0,0,0,0.12)",
+                }}
               >
+                {theme.headingLine1}
+                <br />
+                <span style={{ color: theme.accent }}>
+                  {theme.headingLine2}
+                </span>
+              </h1>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* ─── DESKTOP: Left-Aligned Text Block ─── */}
+        <div
+          className="absolute z-20 hidden md:block md:left-[8vw] md:top-[20%] lg:left-[9vw] lg:top-[23%]"
+          style={{ maxWidth: 340 }}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={`copy-${activeProduct.slug}`}
+              variants={contentVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+            >
+              {/* ── Tier 1: Category Label — script font whisper ── */}
+              <span
+                className="font-script block mb-4 tracking-wide"
+                style={{
+                  color: theme.muted,
+                  opacity: 0.9,
+                  fontSize: 15,
+                  fontStyle: "italic",
+                }}
+              >
+                {theme.badge}
+              </span>
+
+              {/* ── Tier 2: Main Heading + Slide Number ── */}
+              <div className="flex items-start gap-3">
                 <h1
-                  className="font-heading text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold leading-[1.05] tracking-[-0.02em]"
-                  style={{ color: theme.text }}
+                  className="font-sans font-black uppercase tracking-[-0.03em]"
+                  style={{
+                    color: theme.text,
+                    fontSize: "clamp(2.8rem, 5.5vw, 4rem)",
+                    lineHeight: 0.92,
+                  }}
                 >
-                  {activeProduct.heroHeadline.split(" ").slice(0, -1).join(" ")}{" "}
+                  {theme.headingLine1}
+                  <br />
                   <span style={{ color: theme.accent }}>
-                    {activeProduct.heroHeadline.split(" ").slice(-1).join(" ")}
+                    {theme.headingLine2}
                   </span>
                 </h1>
-                <p
-                  className="mt-6 max-w-[32rem] text-sm leading-relaxed md:text-base md:leading-7"
-                  style={{ color: theme.muted }}
+
+                {/* Slide / Index Number */}
+                <span
+                  className="shrink-0 font-mono mt-1"
+                  style={{
+                    color: theme.text,
+                    opacity: 0.3,
+                    fontSize: 11,
+                    fontWeight: 300,
+                    letterSpacing: "0.25em",
+                  }}
                 >
-                  {activeProduct.heroSubtext}
-                </p>
-
-                <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4">
-                  <PrimaryButton
-                    label={`Explore ${activeProduct.shortName}`}
-                    href={`/products/${activeProduct.slug}`}
-                    accentColor={theme.accent}
-                  />
-                  <SecondaryButton
-                    label="Learn More"
-                    href="/about"
-                    accentColor={theme.text}
-                  />
-                </div>
-
-                <div className="mt-8 flex items-center justify-center lg:justify-start gap-4">
-                  <div className="flex -space-x-3">
-                    {["#201813", "#68544A", "#D1B39C"].map((color, index) => (
-                      <div
-                        key={color}
-                        className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white text-xs font-semibold text-white"
-                        style={{ backgroundColor: color, zIndex: 3 - index }}
-                      >
-                        {index + 1}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-semibold" style={{ color: theme.text }}>
-                      5k+ Reviews
-                    </p>
-                    <p className="text-xs" style={{ color: theme.muted }}>
-                      Customers love the flavour-first experience.
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-
-          {/* Right Column: Product Image + Controls */}
-          <div className="relative flex flex-col items-center justify-center lg:min-h-[42rem]">
-            {/* Product Image and Vertical Name Block */}
-            <div className="relative flex w-full items-center justify-center">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={`${activeProduct.id}-image`}
-                  variants={imageMotionVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  className="relative z-10 flex w-full items-center justify-center pb-2"
-                  style={{ perspective: 1400 }}
-                >
-                  <motion.div
-                    animate={floatAnimation}
-                    className="relative"
-                    style={{ transformStyle: "preserve-3d" }}
-                  >
-                    <div className="absolute bottom-[4%] left-1/2 h-6 w-32 -translate-x-1/2 rounded-full bg-black/10 blur-xl" />
-                    <Image
-                      src={activeProduct.image}
-                      alt={`${activeProduct.name} bottle by Singapore Beverages`}
-                      width={950}
-                      height={1600}
-                      priority
-                      className="relative z-10 h-auto w-[13.5rem] object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.1)] md:w-[16.5rem] lg:w-[18.5rem] xl:w-[20.5rem] max-h-[60vh]"
-                    />
-                  </motion.div>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Decorative side text */}
-              <div className="absolute inset-y-0 right-0 hidden items-center lg:flex">
-                <div className="relative flex h-full items-center pr-4">
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.div
-                      key={`${activeProduct.id}-outline`}
-                      className="hero-outline-text [writing-mode:vertical-rl]"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -12 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.45 }}
-                      style={{ color: theme.outline }}
-                    >
-                      {activeProduct.name}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
+                  {slideNumber}
+                </span>
               </div>
-            </div>
 
-            {/* Navigation and Switcher - More breathing room */}
-            <div className="relative z-20 -mt-4 w-full max-w-2xl px-4">
-              <div className="flex flex-col items-center">
-                <div className="mb-2.5 flex items-center justify-center gap-16">
-                  <button
-                    type="button"
-                    aria-label="Previous product"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/8 bg-white/60 shadow-md backdrop-blur-sm transition-all hover:scale-110 active:scale-95"
-                    style={{ color: theme.text }}
-                    onClick={() => handleSelect(activeIndex === 0 ? HERO_PRODUCTS.length - 1 : activeIndex - 1)}
-                  >
-                    <ArrowLeft className="h-4.5 w-4.5" />
-                  </button>
+              {/* ── Tier 3: Description Paragraph ── */}
+              <p
+                className="mt-7 font-sans font-light"
+                style={{
+                  color: theme.muted,
+                  opacity: 0.8,
+                  fontSize: 13,
+                  lineHeight: 1.75,
+                  maxWidth: 280,
+                }}
+              >
+                {activeProduct.heroSubtext}
+              </p>
 
-                  <button
-                    type="button"
-                    aria-label="Next product"
-                    className="flex h-10 w-10 items-center justify-center rounded-full border border-black/8 bg-white/60 shadow-md backdrop-blur-sm transition-all hover:scale-110 active:scale-95"
-                    style={{ color: theme.text }}
-                    onClick={() => handleSelect((activeIndex + 1) % HERO_PRODUCTS.length)}
-                  >
-                    <ArrowRight className="h-4.5 w-4.5" />
-                  </button>
-                </div>
+              {/* ── Subtle CTA ── */}
+              <a
+                href={`/products/${activeProduct.slug}`}
+                className="inline-flex items-center mt-8 uppercase font-semibold group transition-opacity duration-300 hover:opacity-75"
+                style={{
+                  color: theme.accent,
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                }}
+              >
+                Explore
+                <ArrowRight className="ml-2 h-3 w-3 transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
-                <ProductSwitcher
-                  products={HERO_PRODUCTS}
-                  activeIndex={activeIndex}
-                  onSelect={handleSelect}
-                  accentColor={theme.accent}
-                  darkAccentColor={theme.outline}
-                  textColor={theme.text}
+        {/* ─── Center-Stage Product Composition ─── */}
+        <div
+          className="absolute left-1/2 top-[55%] md:top-[53%] -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+          style={{
+            zIndex: 8,
+            height: "clamp(260px, 50vh, 600px)",
+            aspectRatio: "682 / 586",
+          }}
+        >
+          {/* Depth glow / energy splash behind product */}
+          <div
+            className="absolute inset-0 -z-10 rounded-full"
+            aria-hidden="true"
+            style={{
+              background: `radial-gradient(circle at 50% 55%, ${theme.halo}55 0%, transparent 65%)`,
+              transform: "scale(1.4) translateY(5%)",
+              filter: "blur(40px)",
+            }}
+          />
+
+          <AnimatePresence mode="sync">
+            <motion.div
+              key={activeProduct.slug}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.5,
+                ease: "easeInOut",
+              }}
+            >
+              {sortedAssets.map((asset) => (
+                <AssetElement
+                  key={asset.id}
+                  item={asset}
+                  smoothX={smoothX}
+                  smoothY={smoothY}
+                  isFirstProduct={activeIndex === 0}
                 />
-              </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* ─── Bottom Navigation & Product Switcher ─── */}
+        <div className="absolute bottom-5 md:bottom-8 left-1/2 -translate-x-1/2 z-30 w-full max-w-xl px-4">
+          <div className="flex flex-col items-center gap-2.5">
+            {/* Prev / Next arrows */}
+            <div className="flex items-center justify-center gap-16">
+              <button
+                type="button"
+                aria-label="Previous product"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/10 active:scale-95"
+                style={{ color: theme.text }}
+                onClick={() =>
+                  handleSelect(
+                    activeIndex === 0
+                      ? HERO_PRODUCTS.length - 1
+                      : activeIndex - 1,
+                  )
+                }
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+
+              <button
+                type="button"
+                aria-label="Next product"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/5 backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/10 active:scale-95"
+                style={{ color: theme.text }}
+                onClick={() =>
+                  handleSelect(
+                    (activeIndex + 1) % HERO_PRODUCTS.length,
+                  )
+                }
+              >
+                <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
+
+            {/* Product Switcher dots + labels */}
+            <ProductSwitcher
+              products={HERO_PRODUCTS}
+              activeIndex={activeIndex}
+              onSelect={handleSelect}
+              accentColor={theme.accent}
+              darkAccentColor={theme.outline}
+              textColor={theme.text}
+            />
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }

@@ -70,19 +70,7 @@ export function WhyChooseUs() {
     <section className="bg-[#FAF9F6] py-24 md:py-32 px-5 md:px-8 lg:px-10 relative selection:bg-zinc-200">
       <div className="mx-auto max-w-[85rem]">
         
-        {/* Hidden preloader for all accordion images to fetch during the 8s loading screen */}
-        <div className="absolute opacity-0 pointer-events-none z-[-1] overflow-hidden w-px h-px">
-          {BENEFITS.map((benefit) => (
-            <Image
-              key={`preload-${benefit.id}`}
-              src={benefit.image}
-              alt="preload"
-              width={352}
-              height={550}
-              priority
-            />
-          ))}
-        </div>
+        
 
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-16 lg:gap-24 items-start">
           

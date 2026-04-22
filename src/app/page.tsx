@@ -18,29 +18,33 @@ export default async function HomePage() {
   return (
     <>
       <SchemaScript schema={buildLocalBusinessSchema()} />
+
+      {/* ── Above the fold: Hero — priority loaded ── */}
       <HeroProductShowcase />
+
+      {/* ── Below the fold: lazy-rendered sections ── */}
       <AnimatedSection delay={0.04} direction="up">
         <FruitGamesSection />
       </AnimatedSection>
-      <AnimatedSection delay={0.08} direction="up">
+      <AnimatedSection delay={0.06} direction="up">
         <BrandStory />
       </AnimatedSection>
-      <AnimatedSection delay={0.1} direction="up">
+      <AnimatedSection delay={0.08} direction="up">
         <CreatorCollaborationsSection />
       </AnimatedSection>
-      <AnimatedSection delay={0.12} direction="up">
+      <AnimatedSection delay={0.1} direction="up">
         <WhyChooseUs />
       </AnimatedSection>
-      <AnimatedSection delay={0.14} direction="up">
+      <AnimatedSection delay={0.1} direction="up">
         <TrustSection />
       </AnimatedSection>
-      <AnimatedSection delay={0.15} direction="up">
+      <AnimatedSection delay={0.1} direction="up">
         <SegmentedBusinessCTA />
       </AnimatedSection>
-      <AnimatedSection delay={0.16} direction="up">
+      <AnimatedSection delay={0.1} direction="up">
         <EventHighlight />
       </AnimatedSection>
-      <AnimatedSection delay={0.20} direction="up">
+      <AnimatedSection delay={0.1} direction="up">
         <NewsPreview items={newsItems} />
       </AnimatedSection>
     </>

@@ -81,3 +81,19 @@ img {
     transform: translateX(-50%) scale(1.1);
   }
 }
+
+.font-script {
+  font-family: var(--font-script), cursive;
+}
+
+/* GPU-accelerate hero asset layers for smooth parallax & transitions */
+.hero-asset-layer {
+  will-change: transform, opacity;
+  contain: layout style;
+}
+
+/* Optimize below-fold sections: hint browser can defer layout computation */
+.below-fold-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}

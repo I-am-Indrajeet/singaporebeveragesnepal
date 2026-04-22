@@ -15,6 +15,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-body)", "system-ui", "sans-serif"],
         heading: ["var(--font-heading)", "Georgia", "serif"],
+        script: ["var(--font-script)", "cursive"],
       },
     },
   },

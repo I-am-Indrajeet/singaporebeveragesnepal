@@ -163,6 +163,33 @@ export const PRODUCTS: Product[] = [
     ],
     usageOccasions: ["Gin & Tonic", "Cocktail base", "Premium mixers"],
   },
+  {
+    id: "mango-drink",
+    slug: "mango-drink",
+    name: "Mango Drink",
+    shortName: "Mango",
+    tagline: "The King of Fruits",
+    heroHeadline: "Rich Mango Indulgence",
+    heroSubtext: "A deliciously thick, sweet, and tropical mango nectar made from the finest pulp.",
+    description: "Naturals Mango Drink captures the true essence of summer with its rich, pulpy texture and vibrant sweetness. Perfect for sunny afternoons or anytime you crave a tropical escape.",
+    image: "/products/naturals-mango-drink-can.png",
+    bgColor: "#E89B42",
+    bgColorDark: "#AF5514",
+    accentColor: "#FFD685",
+    textColor: "dark",
+    category: "flavoured",
+    seoTitle: "Mango Drink Nepal | Singapore Beverages",
+    seoDescription: "Delicious thick mango drink in Nepal. Natural mango pulp by Singapore Beverages.",
+    seoKeywords: ["mango drink nepal", "mango juice nepal"],
+    sizes: ["250ml", "500ml", "1L"],
+    features: [
+      "Real mango pulp",
+      "Rich texture",
+      "Tropical flavour",
+      "Chilled serving",
+    ],
+    usageOccasions: ["Summer refreshment", "With meals", "Kids favorite"],
+  }
 ];
 
 export const CATALOG_PRODUCTS: Product[] = [...PRODUCTS, ...FRUIT_GAMES_CATALOG_PRODUCTS];

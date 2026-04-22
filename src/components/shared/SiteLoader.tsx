@@ -16,7 +16,7 @@ export function SiteLoader() {
     const timer = setTimeout(() => {
       setIsLoading(false);
       document.body.style.overflow = "";
-    }, 4000); 
+    }, 2000); 
     
     return () => {
       clearTimeout(timer);
@@ -64,7 +64,7 @@ export function SiteLoader() {
               className="absolute bottom-full mb-1 md:mb-3"
               initial={{ left: "0%" }}
               animate={{ left: "100%" }}
-              transition={{ duration: 4, ease: "linear" }}
+              transition={{ duration: 2, ease: "linear" }}
               style={{ x: "-50%" }} // to center the GIF right on top of the tip
             >
               <Image
@@ -84,7 +84,7 @@ export function SiteLoader() {
               <motion.div
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
-                transition={{ duration: 4, ease: "linear" }}
+                transition={{ duration: 2, ease: "linear" }}
                 className="h-full rounded-full bg-[#111111]"
               />
             </div>
