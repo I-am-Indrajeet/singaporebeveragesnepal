@@ -22,16 +22,6 @@ export const clubSodaHeroConfig: HeroProductConfig = {
     glowOpacity: 0.8,
     vignetteOpacity: 0.15,
     accentText: "#182A36",
-    badge: "Clean & Crisp",
-    headingLine1: "CLUB",
-    headingLine2: "SODA",
-    watermark: "SODA",
-    panel: "#F6F9FA",
-    accent: "#0A2540",
-    halo: "#FFFFFF",
-    text: "#0A2540",
-    muted: "#5B7586",
-    outline: "#D1DDE5",
   },
   assets: [
     // ── Ground shadow center (HARD) ──────────────────────────────────────
